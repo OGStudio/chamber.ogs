@@ -1,0 +1,87 @@
+delay
+    default
+        blinkDelay
+            delay = 5000
+moveBy
+    default
+        moveLeft
+            point = 0 0 0 0
+            point = 3000 1 0 0
+            point = 1000 -1 0 0
+            point = 1000 1 0 0
+            point = 2000 -1 0 0
+            point = 500 0 0 0
+# TODO: Remove after testing
+            node = default.center
+        moveForward
+            point = 0 0 0 0
+            point = 3000 0 1 0
+            point = 1000 0 -1 0
+            point = 1000 0 1 0
+            point = 2000 0 -1 0
+            point = 500 0 0 0
+# TODO: Remove after testing
+            node = default.left
+        shakeUp
+            point = 0 0 0 0
+            point = 300 0 0 1
+            point = 50 0 0 -1
+            point = 50 0 0 1
+            point = 100 0 0 -1
+            point = 500 0 0 0
+# TODO: Remove after testing
+            node = default.center
+        shakeLeft
+            point = 0 0 0 0
+            point = 300 1 0 0
+            point = 100 -1 0 0
+            point = 100 1 0 0
+            point = 200 -1 0 0
+            point = 500 0 0 0
+            point = 800 1 0 0
+            point = 900 -1 0 0
+            point = 1000 1 0 0
+            point = 1200 -1 0 0
+            point = 1500 0 0 0
+# TODO: Remove after testing
+            node = default.left
+spawn
+    default
+        moveLeftAndShake
+            action = moveBy.moveLeft
+            action = moveBy.shakeUp
+        moveForwardAndShake
+            action = moveBy.moveForward
+            action = moveBy.shakeLeft
+script
+    default
+        printAnything
+            node = default.center
+            script = scripts/actions/PrintAnything.py
+        rotateMaterial
+            node = default.center
+            script = scripts/actions/RotateMaterial.py
+        customDelay
+            script = scripts/actions/CustomDelay.py
+        runCustomDelay
+            script = scripts/actions/RunCustomDelay.py
+sequence
+    default
+        mainSeq
+            action = script.rotateMaterial
+            action = script.runCustomDelay
+            action = spawn.moveLeftAndShake
+            action = delay.blinkDelay
+            action = script.rotateMaterial
+            action = spawn.moveForwardAndShake
+repeat
+    default
+        mainSeqTwice
+            n = 3
+            action = sequence.mainSeq
+speed
+    default
+        fastMain
+            rate = 3
+            action = repeat.mainSeqTwice
+

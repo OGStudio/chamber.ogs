@@ -1,0 +1,25 @@
+<compositor>
+    <include>pipeline/templates.xml</include>
+    <include>pipeline/default.textures</include>
+    <material name="subject">
+        <texture unit="0" varname="diffuseMap">columnDiffuse</texture>
+        <texture unit="1" varname="normalMap">boxNormal</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
+    <material name="subjectRed">
+        <texture unit="0" varname="diffuseMap">subjectDiffuseRed</texture>
+        <texture unit="1" varname="normalMap">boxNormal</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
+    <material name="floor">
+        <texture unit="0" varname="diffuseMap">floor_cell_tex</texture>
+        <texture unit="1" varname="normalMap">floor_cell_n</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
+</compositor>
