@@ -14,4 +14,10 @@
     <texture name="floor_cell_n" template="textureTemplate">
         <file>pipeline/textures/floor_cell_n.png</file>
     </texture>
+    <texture name="line_segment_tex" template="textureTemplate">
+        <file>pipeline/textures/line_segment_tex.png</file>
+    </texture>
+    <texture name="line_segment_n" template="textureTemplate">
+        <file>pipeline/textures/line_segment_n.png</file>
+    </texture>
 </compositor>

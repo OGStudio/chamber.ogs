@@ -22,4 +22,11 @@
             <value>1</value>
         </uniform>
     </material>
+    <material name="line_segment">
+        <texture unit="0" varname="diffuseMap">line_segment_tex</texture>
+        <texture unit="1" varname="normalMap">line_segment_n</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
 </compositor>
