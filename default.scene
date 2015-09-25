@@ -1,3 +1,4 @@
+
 node
     default
         light
@@ -43,23 +44,6 @@ node
             position = -10.000000 0.000000 0.000000
             material = line_segment
             model = models/line_segment.osgt
-        line2
-            parent = ROOT
-            position = 0.000000 5.000000 0.100000
-        lineSegment21
-            parent = line2
-            position = 10.000000 0.000000 0.000000
-            material = line_segment
-            model = models/line_segment.osgt
-        lineSegment22
-            parent = line2
-            material = line_segment
-            model = models/line_segment.osgt
-        lineSegment23
-            parent = line2
-            position = -10.000000 0.000000 0.000000
-            material = line_segment
-            model = models/line_segment.osgt
         line3
             parent = ROOT
             position = 0.000000 -5.000000 0.100000
@@ -81,3 +65,20 @@ node
             parent = ROOT
             position = 0.000000 1.000000 1.000000
             model = models/box.osgt
+        line2
+            parent = ROOT
+            position = 0.000000 5.000000 0.100000
+        lineSegment21
+            parent = line2
+            position = 10.000000 0.000000 0.000000
+            material = floor
+            model = models/line_segment.osgt
+        lineSegment23
+            parent = line2
+            position = -10.000000 0.000000 0.000000
+            material = floor
+            model = models/line_segment.osgt
+        c-lineSegment21-1672005728
+            parent = line2
+            material = floor
+            model = models/line_segment.osgt

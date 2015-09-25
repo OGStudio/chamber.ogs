@@ -27,7 +27,7 @@ class MainImpl(object):
         st.set("speed.default.fastMain.active", "1")
 #        print "Main: changing 'script' property"
 #        st.set("script.default.printAnything.script", "scripts/actions/PrintEverything.py")
-#        self.action.setState(st)
+        self.action.setState(st)
         print "Main: node selected. END", nodeName
 
 class MainListenerAction(pymjin2.ComponentListener):
