@@ -2,7 +2,7 @@
     <include>pipeline/templates.xml</include>
     <include>pipeline/default.textures</include>
     <material name="subject">
-        <texture unit="0" varname="diffuseMap">columnDiffuse</texture>
+        <texture unit="0" varname="diffuseMap">cement</texture>
         <texture unit="1" varname="normalMap">boxNormal</texture>
         <uniform name="useNormalMap" type="int">
             <value>1</value>
@@ -25,6 +25,13 @@
     <material name="line_segment">
         <texture unit="0" varname="diffuseMap">line_segment_tex</texture>
         <texture unit="1" varname="normalMap">line_segment_n</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
+    <material name="column">
+        <texture unit="0" varname="diffuseMap">cement</texture>
+        <texture unit="1" varname="normalMap">column_n</texture>
         <uniform name="useNormalMap" type="int">
             <value>1</value>
         </uniform>

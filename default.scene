@@ -3,7 +3,7 @@ node
     default
         light
             parent = ROOT
-            position = 0.000000 10.000000 10.000000
+            position = 0.000000 13.600000 12.500000
             light = default
         left
             parent = ROOT
@@ -46,7 +46,7 @@ node
             model = models/line_segment.osgt
         line3
             parent = ROOT
-            position = 0.000000 -5.000000 0.100000
+            position = 0.000000 -8.000000 0.100000
         lineSegment31
             parent = line3
             position = 10.000000 0.000000 0.000000
@@ -67,7 +67,7 @@ node
             model = models/box.osgt
         line2
             parent = ROOT
-            position = 0.000000 5.000000 0.100000
+            position = 0.000000 8.000000 0.100000
         lineSegment21
             parent = line2
             position = 10.000000 0.000000 0.000000
@@ -78,7 +78,71 @@ node
             position = -10.000000 0.000000 0.000000
             material = floor
             model = models/line_segment.osgt
-        c-lineSegment21-1672005728
+        lineSegment22
             parent = line2
             material = floor
             model = models/line_segment.osgt
+        row1
+            parent = ROOT
+            position = 5.000000 -10.000000 0.000000
+        column11
+            parent = row1
+            material = column
+            model = models/column.osgt
+        column12
+            parent = row1
+            position = 0.000000 4.000000 0.000000
+            material = column
+            model = models/column.osgt
+        column13
+            parent = row1
+            position = 0.000000 8.000000 0.000000
+            material = column
+            model = models/column.osgt
+        column14
+            parent = row1
+            position = 0.000000 12.000000 0.000000
+            material = column
+            model = models/column.osgt
+        column15
+            parent = row1
+            position = 0.000000 16.000000 0.000000
+            material = column
+            model = models/column.osgt
+        column16
+            parent = row1
+            position = 0.000000 20.000000 0.000000
+            material = column
+            model = models/column.osgt
+        row2
+            parent = ROOT
+            position = -5.000000 -10.000000 0.000000
+        column21
+            parent = row2
+            material = column
+            model = models/column.osgt
+        column22
+            parent = row2
+            position = 0.000000 4.000000 0.000000
+            material = column
+            model = models/column.osgt
+        column23
+            parent = row2
+            position = 0.000000 8.000000 0.000000
+            material = column
+            model = models/column.osgt
+        column24
+            parent = row2
+            position = 0.000000 12.000000 0.000000
+            material = column
+            model = models/column.osgt
+        column25
+            parent = row2
+            position = 0.000000 16.000000 0.000000
+            material = column
+            model = models/column.osgt
+        column26
+            parent = row2
+            position = 0.000000 20.000000 0.000000
+            material = column
+            model = models/column.osgt
