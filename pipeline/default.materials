@@ -36,4 +36,50 @@
             <value>1</value>
         </uniform>
     </material>
+    <material name="line_belt">
+        <texture unit="0" varname="diffuseMap">line_belt_tex</texture>
+        <texture unit="1" varname="normalMap">line_belt_n</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
+    <material name="simple_box">
+        <texture unit="0" varname="diffuseMap">simple_box_tex</texture>
+        <texture unit="1" varname="normalMap">simple_box_n</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
+    <material name="simple_box2">
+        <texture unit="0" varname="diffuseMap">cement</texture>
+        <texture unit="1" varname="normalMap">simple_box_n</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
+    <material name="simple_box3">
+        <texture unit="0" varname="diffuseMap">simple_box_tex</texture>
+        <texture unit="1" varname="normalMap">boxNormal</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
+    <material name="box2">
+        <texture unit="0" varname="diffuseMap">box2_tex</texture>
+        <texture unit="1" varname="normalMap">box2_n</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
+    <material name="stand">
+        <texture unit="0" varname="diffuseMap">stand_tex</texture>
+        <texture unit="1" varname="normalMap">stand_n</texture>
+        <texture unit="2" varname="glowMap">stand_glow</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+        <uniform name="useGlowMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
 </compositor>

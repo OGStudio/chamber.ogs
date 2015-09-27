@@ -13,6 +13,7 @@ node
         subleft
             parent = left
             position = 0.000000 0.000000 -1.000000
+            material = simple_box
             model = models/box.osgt
         right
             parent = ROOT
@@ -29,7 +30,6 @@ node
             model = models/floor.osgt
         line1
             parent = ROOT
-            position = 0.000000 0.000000 0.100000
         lineSegment1
             parent = line1
             position = 10.000000 0.000000 0.000000
@@ -46,28 +46,29 @@ node
             model = models/line_segment.osgt
         line3
             parent = ROOT
-            position = 0.000000 -8.000000 0.100000
+            position = 0.000000 -8.000000 0.000000
         lineSegment31
             parent = line3
             position = 10.000000 0.000000 0.000000
-            material = line_segment
+            material = column
             model = models/line_segment.osgt
         lineSegment32
             parent = line3
-            material = line_segment
+            material = column
             model = models/line_segment.osgt
         lineSegment324078034278
             parent = line3
             position = -10.000000 0.000000 0.000000
-            material = line_segment
+            material = column
             model = models/line_segment.osgt
         center
             parent = ROOT
             position = 0.000000 1.000000 1.000000
+            material = simple_box
             model = models/box.osgt
         line2
             parent = ROOT
-            position = 0.000000 8.000000 0.100000
+            position = 0.000000 8.000000 0.000000
         lineSegment21
             parent = line2
             position = 10.000000 0.000000 0.000000
@@ -117,10 +118,6 @@ node
         row2
             parent = ROOT
             position = -5.000000 -10.000000 0.000000
-        column21
-            parent = row2
-            material = column
-            model = models/column.osgt
         column22
             parent = row2
             position = 0.000000 4.000000 0.000000
@@ -146,3 +143,37 @@ node
             position = 0.000000 20.000000 0.000000
             material = column
             model = models/column.osgt
+        column21
+            parent = row2
+            material = column
+            model = models/column.osgt
+        lineBelt1
+            parent = ROOT
+            material = line_belt
+            model = models/line_belt.osgt
+        lineBelt2
+            parent = ROOT
+            position = 0.000000 8.000000 0.000000
+            material = line_belt
+            model = models/line_belt.osgt
+        lineBelt3
+            parent = ROOT
+            position = 0.000000 -8.000000 0.000000
+            material = line_belt
+            model = models/line_belt.osgt
+        moveBeltLeft
+            parent = ROOT
+            position = 4.000000 2.000000 0.000000
+            material = line_segment
+            model = models/box.osgt
+            script = scripts/MoveLineBelt.py
+        moveBeltRight
+            parent = ROOT
+            position = -4.000000 2.000000 0.000000
+            material = line_segment
+            model = models/box.osgt
+        stand
+            parent = ROOT
+            position = 3.500000 10.600000 0.000000
+            material = stand
+            model = models/stand.osgt

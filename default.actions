@@ -4,6 +4,9 @@ delay
             delay = 5000
 moveBy
     default
+        moveBelt
+            point = 0 0 0 0
+            point = 3000 3 0 0
         moveLeft
             point = 0 0 0 0
             point = 3000 1 0 0
@@ -11,7 +14,6 @@ moveBy
             point = 1000 1 0 0
             point = 2000 -1 0 0
             point = 500 0 0 0
-# TODO: Remove after testing
             node = default.center
         moveForward
             point = 0 0 0 0
@@ -20,7 +22,6 @@ moveBy
             point = 1000 0 1 0
             point = 2000 0 -1 0
             point = 500 0 0 0
-# TODO: Remove after testing
             node = default.left
         shakeUp
             point = 0 0 0 0
@@ -29,7 +30,6 @@ moveBy
             point = 50 0 0 1
             point = 100 0 0 -1
             point = 500 0 0 0
-# TODO: Remove after testing
             node = default.center
         shakeLeft
             point = 0 0 0 0
@@ -43,7 +43,6 @@ moveBy
             point = 1000 1 0 0
             point = 1200 -1 0 0
             point = 1500 0 0 0
-# TODO: Remove after testing
             node = default.left
 spawn
     default

@@ -23,4 +23,31 @@
     <texture name="column_n" template="textureTemplate">
         <file>pipeline/textures/column_n.png</file>
     </texture>
+    <texture name="line_belt_tex" template="textureTemplate">
+        <file>pipeline/textures/line_belt_tex.png</file>
+    </texture>
+    <texture name="line_belt_n" template="textureTemplate">
+        <file>pipeline/textures/line_belt_n.png</file>
+    </texture>
+    <texture name="simple_box_tex" template="textureTemplate">
+        <file>pipeline/textures/simple_box_tex.png</file>
+    </texture>
+    <texture name="simple_box_n" template="textureTemplate">
+        <file>pipeline/textures/simple_box_n.png</file>
+    </texture>
+    <texture name="box2_n" template="textureTemplate">
+        <file>pipeline/textures/box2_n.png</file>
+    </texture>
+    <texture name="box2_tex" template="textureTemplate">
+        <file>pipeline/textures/box2_tex.png</file>
+    </texture>
+    <texture name="stand_tex" template="textureTemplate">
+        <file>pipeline/textures/stand_tex.png</file>
+    </texture>
+    <texture name="stand_n" template="textureTemplate">
+        <file>pipeline/textures/stand_n.png</file>
+    </texture>
+    <texture name="stand_glow" template="textureTemplate">
+        <file>pipeline/textures/stand_glow.png</file>
+    </texture>
 </compositor>
