@@ -50,4 +50,13 @@
     <texture name="stand_glow" template="textureTemplate">
         <file>pipeline/textures/stand_glow.png</file>
     </texture>
+    <texture name="line_segment_light_tex" template="textureTemplate">
+        <file>pipeline/textures/line_segment_light_tex.png</file>
+    </texture>
+    <texture name="line_segment_light_glow" template="textureTemplate">
+        <file>pipeline/textures/line_segment_light_glow.png</file>
+    </texture>
+    <texture name="line_segment_light_n" template="textureTemplate">
+        <file>pipeline/textures/line_segment_light_n.png</file>
+    </texture>
 </compositor>

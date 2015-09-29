@@ -82,4 +82,22 @@
             <value>1</value>
         </uniform>
     </material>
+    <material name="line_segment_light_off">
+        <texture unit="0" varname="diffuseMap">line_segment_light_tex</texture>
+        <texture unit="1" varname="normalMap">line_segment_light_n</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
+    <material name="line_segment_light_on">
+        <texture unit="0" varname="diffuseMap">line_segment_light_glow</texture>
+        <texture unit="1" varname="normalMap">line_segment_light_n</texture>
+        <texture unit="0" varname="glowMap">line_segment_light_glow</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+        <uniform name="useGlowMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
 </compositor>

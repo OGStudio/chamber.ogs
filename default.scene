@@ -3,7 +3,7 @@ node
     default
         light
             parent = ROOT
-            position = 0.000000 13.600000 12.500000
+            position = 0.000000 15.000000 15.000000
             light = default
         left
             parent = ROOT
@@ -161,19 +161,101 @@ node
             position = 0.000000 -8.000000 0.000000
             material = line_belt
             model = models/line_belt.osgt
-        moveBeltLeft
-            parent = ROOT
-            position = 4.000000 2.000000 0.000000
-            material = line_segment
-            model = models/box.osgt
-            script = scripts/MoveLineBelt.py
-        moveBeltRight
-            parent = ROOT
-            position = -4.000000 2.000000 0.000000
-            material = line_segment
-            model = models/box.osgt
         stand
             parent = ROOT
-            position = 3.500000 10.600000 0.000000
+            position = 2.000000 20.000000 8.000000
             material = stand
             model = models/stand.osgt
+        floor2
+            parent = ROOT
+            position = 0.000000 35.000000 8.000000
+            material = subjectRed
+            model = models/floor.osgt
+        arrowRight
+            parent = ROOT
+            position = 1.700000 20.100000 9.300000
+            material = line_segment
+            model = models/arrowRight.osgt
+        arrowLeft
+            parent = ROOT
+            position = 1.900000 20.100000 9.300000
+            material = line_segment
+            model = models/arrowLeft.osgt
+        arrowUp
+            parent = ROOT
+            position = 2.300000 20.000000 9.350000
+            material = line_segment
+            model = models/arrowUp.osgt
+        arrowDown
+            parent = ROOT
+            position = 2.300000 20.150000 9.200000
+            material = line_segment
+            model = models/arrowDown.osgt
+        lineLight1
+            parent = ROOT
+        c-lineSegmentLight1-1660532370
+            parent = lineLight1
+            position = 4.000000 -2.000000 0.000000
+            material = line_segment_light_off
+            model = models/lineSegmentLight.osgt
+        c-lineSegmentLight2-3940945510
+            parent = lineLight1
+            position = -4.000000 -2.000000 0.000000
+            material = line_segment_light_off
+            model = models/lineSegmentLight.osgt
+        lineSegmentLight2
+            parent = lineLight1
+            position = -4.000000 2.000000 0.000000
+            material = line_segment_light_off
+            model = models/lineSegmentLight.osgt
+        lineSegmentLight1
+            parent = lineLight1
+            position = 4.000000 2.000000 0.000000
+            material = line_segment_light_off
+            model = models/lineSegmentLight.osgt
+        c-lineLight1-1447283036
+            parent = ROOT
+            position = 0.000000 8.000000 0.000000
+        c-c-lineSegmentLight1-1660532370-215424955
+            parent = c-lineLight1-1447283036
+            position = 4.000000 -2.000000 0.000000
+            material = line_segment_light_off
+            model = models/lineSegmentLight.osgt
+        c-c-lineSegmentLight2-3940945510-3694203449
+            parent = c-lineLight1-1447283036
+            position = -4.000000 -2.000000 0.000000
+            material = line_segment_light_off
+            model = models/lineSegmentLight.osgt
+        c-lineSegmentLight2-2924740357
+            parent = c-lineLight1-1447283036
+            position = -4.000000 2.000000 0.000000
+            material = line_segment_light_off
+            model = models/lineSegmentLight.osgt
+        c-lineSegmentLight1-1862401250
+            parent = c-lineLight1-1447283036
+            position = 4.000000 2.000000 0.000000
+            material = line_segment_light_off
+            model = models/lineSegmentLight.osgt
+        c-lineLight1-495264199
+            parent = ROOT
+            position = 0.000000 -8.000000 0.000000
+        c-c-lineSegmentLight1-1660532370-96863071
+            parent = c-lineLight1-495264199
+            position = 4.000000 -2.000000 0.000000
+            material = line_segment_light_on
+            model = models/lineSegmentLight.osgt
+        c-c-lineSegmentLight2-3940945510-3191647177
+            parent = c-lineLight1-495264199
+            position = -4.000000 -2.000000 0.000000
+            material = line_segment_light_on
+            model = models/lineSegmentLight.osgt
+        c-lineSegmentLight2-2761275156
+            parent = c-lineLight1-495264199
+            position = -4.000000 2.000000 0.000000
+            material = line_segment_light_on
+            model = models/lineSegmentLight.osgt
+        c-lineSegmentLight1-2357392546
+            parent = c-lineLight1-495264199
+            position = 4.000000 2.000000 0.000000
+            material = line_segment_light_on
+            model = models/lineSegmentLight.osgt
