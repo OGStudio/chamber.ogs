@@ -166,6 +166,7 @@ node
             position = 2.000000 20.000000 8.000000
             material = stand
             model = models/stand.osgt
+            script = scripts/StandControls.py
         floor2
             parent = ROOT
             position = 0.000000 35.000000 8.000000
@@ -193,69 +194,69 @@ node
             model = models/arrowDown.osgt
         lineLight1
             parent = ROOT
-        c-lineSegmentLight1-1660532370
+        light11
             parent = lineLight1
             position = 4.000000 -2.000000 0.000000
             material = line_segment_light_off
             model = models/lineSegmentLight.osgt
-        c-lineSegmentLight2-3940945510
+        light12
             parent = lineLight1
             position = -4.000000 -2.000000 0.000000
             material = line_segment_light_off
             model = models/lineSegmentLight.osgt
-        lineSegmentLight2
+        light13
             parent = lineLight1
             position = -4.000000 2.000000 0.000000
             material = line_segment_light_off
             model = models/lineSegmentLight.osgt
-        lineSegmentLight1
+        light14
             parent = lineLight1
             position = 4.000000 2.000000 0.000000
             material = line_segment_light_off
             model = models/lineSegmentLight.osgt
-        c-lineLight1-1447283036
+        lineLight2
             parent = ROOT
             position = 0.000000 8.000000 0.000000
-        c-c-lineSegmentLight1-1660532370-215424955
-            parent = c-lineLight1-1447283036
+        light21
+            parent = lineLight2
             position = 4.000000 -2.000000 0.000000
             material = line_segment_light_off
             model = models/lineSegmentLight.osgt
-        c-c-lineSegmentLight2-3940945510-3694203449
-            parent = c-lineLight1-1447283036
+        light22
+            parent = lineLight2
             position = -4.000000 -2.000000 0.000000
             material = line_segment_light_off
             model = models/lineSegmentLight.osgt
-        c-lineSegmentLight2-2924740357
-            parent = c-lineLight1-1447283036
+        light23
+            parent = lineLight2
             position = -4.000000 2.000000 0.000000
             material = line_segment_light_off
             model = models/lineSegmentLight.osgt
-        c-lineSegmentLight1-1862401250
-            parent = c-lineLight1-1447283036
+        light24
+            parent = lineLight2
             position = 4.000000 2.000000 0.000000
             material = line_segment_light_off
             model = models/lineSegmentLight.osgt
-        c-lineLight1-495264199
+        lineLight3
             parent = ROOT
             position = 0.000000 -8.000000 0.000000
-        c-c-lineSegmentLight1-1660532370-96863071
-            parent = c-lineLight1-495264199
+        light31
+            parent = lineLight3
             position = 4.000000 -2.000000 0.000000
             material = line_segment_light_on
             model = models/lineSegmentLight.osgt
-        c-c-lineSegmentLight2-3940945510-3191647177
-            parent = c-lineLight1-495264199
+        light32
+            parent = lineLight3
             position = -4.000000 -2.000000 0.000000
             material = line_segment_light_on
             model = models/lineSegmentLight.osgt
-        c-lineSegmentLight2-2761275156
-            parent = c-lineLight1-495264199
+        light33
+            parent = lineLight3
             position = -4.000000 2.000000 0.000000
             material = line_segment_light_on
             model = models/lineSegmentLight.osgt
-        c-lineSegmentLight1-2357392546
-            parent = c-lineLight1-495264199
+        light34
+            parent = lineLight3
             position = 4.000000 2.000000 0.000000
             material = line_segment_light_on
             model = models/lineSegmentLight.osgt
