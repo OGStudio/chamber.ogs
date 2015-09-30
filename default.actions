@@ -4,9 +4,12 @@ delay
             delay = 5000
 moveBy
     default
-        moveBelt
+        moveBeltLeft
             point = 0 0 0 0
             point = 3000 3 0 0
+        moveBeltRight
+            point = 0 0 0 0
+            point = 3000 -3 0 0
         moveLeft
             point = 0 0 0 0
             point = 3000 1 0 0

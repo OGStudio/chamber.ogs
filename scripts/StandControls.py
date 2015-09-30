@@ -2,20 +2,52 @@
 import pymjin2
 
 class StandControlsImpl(object):
-    def __init__(self, scene):
+    def __init__(self, scene, action):
         # Refer.
-        self.scene = scene
+        self.scene  = scene
+        self.action = action
         # Setup.
-        self.lights = ["lineLight3",
-                       "lineLight1",
-                       "lineLight2"]
-        self.lightOn  = "line_segment_light_on"
-        self.lightOff = "line_segment_light_off"
+        self.belts     = ["lineBelt3",
+                          "lineBelt1",
+                          "lineBelt2"]
+        self.lights    = ["lineLight3",
+                          "lineLight1",
+                          "lineLight2"]
+        self.lightOn   = "line_segment_light_on"
+        self.lightOff  = "line_segment_light_off"
+        self.nodeLeft  = "arrowLeft"
+        self.nodeRight = "arrowRight"
+        self.nodeUp    = "arrowUp"
+        self.nodeDown  = "arrowDown"
+        self.moveLeft  = "moveBy.default.moveBeltLeft"
+        self.moveRight = "moveBy.default.moveBeltRight"
         # State.
         self.currentLight = 0
     def __del__(self):
         # Derefer.
-        self.scene = None
+        self.scene  = None
+        self.action = None
+    def moveSelectedLine(self, sceneName, right):
+        print "moveSelectedLine", right
+        keyNode = "{0}.node".format(self.moveLeft)
+        keyRun  = "{0}.active".format(self.moveLeft)
+        if (right):
+            keyNode = "{0}.node".format(self.moveRight)
+            keyRun  = "{0}.active".format(self.moveRight)
+        value = self.belts[self.currentLight]
+        st = pymjin2.State()
+        st.set(keyNode, sceneName + "." + value)
+        st.set(keyRun, "1")
+        self.action.setState(st)
+    def processLineCommand(self, sceneName, cmd):
+        if (cmd == self.nodeUp):
+            self.switchLine(sceneName, False)
+        elif (cmd == self.nodeDown):
+            self.switchLine(sceneName, True)
+        elif (cmd == self.nodeLeft):
+            self.moveSelectedLine(sceneName, False)
+        elif (cmd == self.nodeRight):
+            self.moveSelectedLine(sceneName, True)
     def setLightState(self, sceneName, lightName, state):
         key = "node.{0}.{1}.children".format(sceneName, lightName)
         st = self.scene.state([key])
@@ -61,10 +93,7 @@ class StandControlsListenerScene(pymjin2.ComponentListener):
             v = k.split(".")
             sceneName = v[1]
             value = st.value(k)[0]
-            if (value == "arrowUp"):
-                self.impl.switchLine(sceneName, False)
-            elif (value == "arrowDown"):
-                self.impl.switchLine(sceneName, True)
+            self.impl.processLineCommand(sceneName, value)
 
 class StandControls:
     def __init__(self, sceneName, nodeName, scene, action):
@@ -73,7 +102,7 @@ class StandControls:
         self.nodeName  = nodeName
         self.scene     = scene
         # Create.
-        self.impl          = StandControlsImpl(scene)
+        self.impl          = StandControlsImpl(scene, action)
         self.listenerScene = StandControlsListenerScene(self.impl)
         # Prepare.
         key = "selector.{0}.selectedNode".format(sceneName)
