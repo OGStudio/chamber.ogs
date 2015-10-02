@@ -25,6 +25,7 @@ class ControlsImpl(object):
         self.nodeDown  = "controlArrowDown"
         self.moveLeft  = "moveBy.default.moveBeltLeft"
         self.moveRight = "moveBy.default.moveBeltRight"
+        self.pressNode = "moveBy.default.pressArrow"
         # State.
         self.currentLight = 0
         self.beltIsMoving = False
@@ -64,16 +65,28 @@ class ControlsImpl(object):
         st = pymjin2.State()
         st.set(key, mat)
         self.scene.setState(st)
+    def pressArrow(self, sceneName, arrowName):
+        print "pressArrow", sceneName, arrowName
+        st = pymjin2.State()
+        keyNode = "{0}.node".format(self.pressNode)
+        keyRun  = "{0}.active".format(self.pressNode)
+        st.set(keyNode, sceneName + "." + arrowName)
+        st.set(keyRun, "1")
+        self.action.setState(st)
     def processLineCommand(self, sceneName, cmd):
         if (cmd == self.nodeUp):
             self.switchLine(sceneName, False)
+            self.pressArrow(sceneName, cmd);
         elif (cmd == self.nodeDown):
             self.switchLine(sceneName, True)
+            self.pressArrow(sceneName, cmd);
         if (not self.beltIsMoving):
             if (cmd == self.nodeLeft):
                 self.moveSelectedLine(sceneName, False)
+                self.pressArrow(sceneName, cmd);
             elif (cmd == self.nodeRight):
                 self.moveSelectedLine(sceneName, True)
+                self.pressArrow(sceneName, cmd);
     def setLightState(self, sceneName, lightName, state):
         key = "node.{0}.{1}.children".format(sceneName, lightName)
         st = self.scene.state([key])
