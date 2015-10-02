@@ -59,4 +59,21 @@
     <texture name="line_segment_light_n" template="textureTemplate">
         <file>pipeline/textures/line_segment_light_n.png</file>
     </texture>
+    <texture name="control_tex" template="textureTemplate">
+        <file>pipeline/textures/control_tex.png</file>
+    </texture>
+    <texture name="control_n" template="textureTemplate">
+        <file>pipeline/textures/control_n.png</file>
+    </texture>
+    <texture name="control_signal_n" template="textureTemplate">
+        <file>pipeline/textures/control_signal_n.png</file>
+    </texture>
+    <texture name="control_arrow_n" template="textureTemplate">
+        <file>pipeline/textures/control_arrow_n.png</file>
+    </texture>
+
+    <texture name="control_tex2" template="textureTemplate">
+        <file>pipeline/textures/control_tex2.png</file>
+    </texture>
+
 </compositor>

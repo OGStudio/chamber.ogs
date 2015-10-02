@@ -149,70 +149,40 @@ node
             model = models/column.osgt
         lineBelt1
             parent = ROOT
+            position = 3.000000 0.000000 0.000000
             material = line_belt
             model = models/line_belt.osgt
         lineBelt2
             parent = ROOT
-            position = 0.000000 8.000000 0.000000
+            position = 3.000000 8.000000 0.000000
             material = line_belt
             model = models/line_belt.osgt
         lineBelt3
             parent = ROOT
-            position = 0.000000 -8.000000 0.000000
+            position = 3.000000 -8.000000 0.000000
             material = line_belt
             model = models/line_belt.osgt
-        stand
-            parent = ROOT
-            position = 2.000000 20.000000 8.000000
-            material = stand
-            model = models/stand.osgt
-            script = scripts/StandControls.py
-        floor2
-            parent = ROOT
-            position = 0.000000 35.000000 8.000000
-            material = subjectRed
-            model = models/floor.osgt
-        arrowRight
-            parent = ROOT
-            position = 1.700000 20.100000 9.300000
-            material = line_segment
-            model = models/arrowRight.osgt
-        arrowLeft
-            parent = ROOT
-            position = 1.900000 20.100000 9.300000
-            material = line_segment
-            model = models/arrowLeft.osgt
-        arrowUp
-            parent = ROOT
-            position = 2.300000 20.000000 9.350000
-            material = line_segment
-            model = models/arrowUp.osgt
-        arrowDown
-            parent = ROOT
-            position = 2.300000 20.150000 9.200000
-            material = line_segment
-            model = models/arrowDown.osgt
         lineLight1
             parent = ROOT
         light11
             parent = lineLight1
             position = 4.000000 -2.000000 0.000000
-            material = line_segment_light_off
+            material = line_segment_light_on
             model = models/lineSegmentLight.osgt
         light12
             parent = lineLight1
             position = -4.000000 -2.000000 0.000000
-            material = line_segment_light_off
+            material = line_segment_light_on
             model = models/lineSegmentLight.osgt
         light13
             parent = lineLight1
             position = -4.000000 2.000000 0.000000
-            material = line_segment_light_off
+            material = line_segment_light_on
             model = models/lineSegmentLight.osgt
         light14
             parent = lineLight1
             position = 4.000000 2.000000 0.000000
-            material = line_segment_light_off
+            material = line_segment_light_on
             model = models/lineSegmentLight.osgt
         lineLight2
             parent = ROOT
@@ -243,20 +213,52 @@ node
         light31
             parent = lineLight3
             position = 4.000000 -2.000000 0.000000
-            material = line_segment_light_on
+            material = line_segment_light_off
             model = models/lineSegmentLight.osgt
         light32
             parent = lineLight3
             position = -4.000000 -2.000000 0.000000
-            material = line_segment_light_on
+            material = line_segment_light_off
             model = models/lineSegmentLight.osgt
         light33
             parent = lineLight3
             position = -4.000000 2.000000 0.000000
-            material = line_segment_light_on
+            material = line_segment_light_off
             model = models/lineSegmentLight.osgt
         light34
             parent = lineLight3
             position = 4.000000 2.000000 0.000000
-            material = line_segment_light_on
+            material = line_segment_light_off
             model = models/lineSegmentLight.osgt
+        control
+            parent = ROOT
+            position = 0.000000 13.000000 0.000000
+            material = control
+            model = models/control.osgt
+        controlArrowDown
+            parent = control
+            position = 0.000000 0.000000 0.200000
+            material = control_arrow
+            model = models/controlArrow.osgt
+        controlArrowUp
+            parent = control
+            position = 0.000000 0.000000 0.200000
+            rotation = 0.000000 0.000000 180.000000
+            material = control_arrow
+            model = models/controlArrow.osgt
+        controlArrowRight
+            parent = control
+            position = 0.000000 0.000000 0.200000
+            rotation = 0.000000 0.000000 90.000000
+            material = control_arrow
+            model = models/controlArrow.osgt
+        controlArrowLeft
+            parent = control
+            position = 0.000000 0.000000 0.200000
+            rotation = 0.000000 0.000000 270.000000
+            material = control_arrow
+            model = models/controlArrow.osgt
+        controlSignal
+            parent = control
+            material = control_signal
+            model = models/controlSignal.osgt
