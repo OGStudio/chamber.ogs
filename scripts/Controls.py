@@ -7,12 +7,13 @@ class ControlsImpl(object):
         self.scene  = scene
         self.action = action
         # Setup.
-        self.belts     = ["lineBelt3",
-                          "lineBelt1",
-                          "lineBelt2"]
-        self.lights    = ["lineLight3",
-                          "lineLight1",
-                          "lineLight2"]
+        self.beltSteps = 3
+        self.belts     = { "lineBelt1" : 0,
+                           "lineBelt2" : 0,
+                           "lineBelt3" : 0}
+        self.lights    = ["lineLight1",
+                          "lineLight2",
+                          "lineLight3"]
         self.lightOn   = "line_segment_light_on"
         self.lightOff  = "line_segment_light_off"
         self.signal    = "controlSignal"
@@ -26,23 +27,35 @@ class ControlsImpl(object):
         self.moveRight = "moveBy.default.moveBeltRight"
         # State.
         self.currentLight = 0
+        self.beltIsMoving = False
     def __del__(self):
         # Derefer.
         self.scene  = None
         self.action = None
     def moveSelectedLine(self, sceneName, right):
-        print "moveSelectedLine", "right" if right else "left"
+        belts = sorted(self.belts.keys())
+        beltName = belts[self.currentLight]
+        step = self.belts[beltName]
+        newStep = step + 1 if right else step - 1
+        ok = False
+        if (right):
+            ok = newStep < self.beltSteps
+        else:
+            ok = newStep >= 0
+        if (not ok):
+            return
+        self.belts[beltName] = newStep
         keyNode = "{0}.node".format(self.moveLeft)
         keyRun  = "{0}.active".format(self.moveLeft)
         if (right):
             keyNode = "{0}.node".format(self.moveRight)
             keyRun  = "{0}.active".format(self.moveRight)
-        value = self.belts[self.currentLight]
         st = pymjin2.State()
-        st.set(keyNode, sceneName + "." + value)
+        st.set(keyNode, sceneName + "." + beltName)
         st.set(keyRun, "1")
         self.action.setState(st)
     def onActionState(self, sceneName, actionName, state):
+        self.beltIsMoving = state
         # Set signal material based on activity.
         mat = self.signalOff
         if (state):
@@ -56,10 +69,11 @@ class ControlsImpl(object):
             self.switchLine(sceneName, False)
         elif (cmd == self.nodeDown):
             self.switchLine(sceneName, True)
-        elif (cmd == self.nodeLeft):
-            self.moveSelectedLine(sceneName, False)
-        elif (cmd == self.nodeRight):
-            self.moveSelectedLine(sceneName, True)
+        if (not self.beltIsMoving):
+            if (cmd == self.nodeLeft):
+                self.moveSelectedLine(sceneName, False)
+            elif (cmd == self.nodeRight):
+                self.moveSelectedLine(sceneName, True)
     def setLightState(self, sceneName, lightName, state):
         key = "node.{0}.{1}.children".format(sceneName, lightName)
         st = self.scene.state([key])

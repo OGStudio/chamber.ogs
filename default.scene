@@ -28,36 +28,36 @@ node
             parent = ROOT
             material = floor
             model = models/floor.osgt
-        line1
+        line2
             parent = ROOT
         lineSegment1
-            parent = line1
+            parent = line2
             position = 10.000000 0.000000 0.000000
             material = line_segment
             model = models/line_segment.osgt
         lineSegment2
-            parent = line1
+            parent = line2
             material = line_segment
             model = models/line_segment.osgt
         lineSegment3
-            parent = line1
+            parent = line2
             position = -10.000000 0.000000 0.000000
             material = line_segment
             model = models/line_segment.osgt
-        line3
+        line1
             parent = ROOT
             position = 0.000000 -8.000000 0.000000
         lineSegment31
-            parent = line3
+            parent = line1
             position = 10.000000 0.000000 0.000000
             material = column
             model = models/line_segment.osgt
         lineSegment32
-            parent = line3
+            parent = line1
             material = column
             model = models/line_segment.osgt
         lineSegment324078034278
-            parent = line3
+            parent = line1
             position = -10.000000 0.000000 0.000000
             material = column
             model = models/line_segment.osgt
@@ -66,21 +66,21 @@ node
             position = 0.000000 1.000000 1.000000
             material = simple_box
             model = models/box.osgt
-        line2
+        line3
             parent = ROOT
             position = 0.000000 8.000000 0.000000
         lineSegment21
-            parent = line2
+            parent = line3
             position = 10.000000 0.000000 0.000000
             material = floor
             model = models/line_segment.osgt
         lineSegment23
-            parent = line2
+            parent = line3
             position = -10.000000 0.000000 0.000000
             material = floor
             model = models/line_segment.osgt
         lineSegment22
-            parent = line2
+            parent = line3
             material = floor
             model = models/line_segment.osgt
         row1
@@ -147,86 +147,86 @@ node
             parent = row2
             material = column
             model = models/column.osgt
-        lineBelt1
+        lineBelt2
             parent = ROOT
             position = 3.000000 0.000000 0.000000
             material = line_belt
             model = models/line_belt.osgt
-        lineBelt2
+        lineBelt3
             parent = ROOT
             position = 3.000015 8.000000 0.000000
             material = line_belt
             model = models/line_belt.osgt
-        lineBelt3
+        lineBelt1
             parent = ROOT
-            position = 3.000000 -8.000000 0.000000
+            position = 3.000001 -8.000000 0.000000
             material = line_belt
             model = models/line_belt.osgt
-        lineLight1
+        lineLight2
             parent = ROOT
         light11
-            parent = lineLight1
+            parent = lineLight2
             position = 4.000000 -2.000000 0.000000
             material = line_segment_light_off
             model = models/lineSegmentLight.osgt
         light12
-            parent = lineLight1
+            parent = lineLight2
             position = -4.000000 -2.000000 0.000000
             material = line_segment_light_off
             model = models/lineSegmentLight.osgt
         light13
-            parent = lineLight1
+            parent = lineLight2
             position = -4.000000 2.000000 0.000000
             material = line_segment_light_off
             model = models/lineSegmentLight.osgt
         light14
-            parent = lineLight1
-            position = 4.000000 2.000000 0.000000
-            material = line_segment_light_off
-            model = models/lineSegmentLight.osgt
-        lineLight2
-            parent = ROOT
-            position = 0.000000 8.000000 0.000000
-        light21
-            parent = lineLight2
-            position = 4.000000 -2.000000 0.000000
-            material = line_segment_light_off
-            model = models/lineSegmentLight.osgt
-        light22
-            parent = lineLight2
-            position = -4.000000 -2.000000 0.000000
-            material = line_segment_light_off
-            model = models/lineSegmentLight.osgt
-        light23
-            parent = lineLight2
-            position = -4.000000 2.000000 0.000000
-            material = line_segment_light_off
-            model = models/lineSegmentLight.osgt
-        light24
             parent = lineLight2
             position = 4.000000 2.000000 0.000000
             material = line_segment_light_off
             model = models/lineSegmentLight.osgt
         lineLight3
             parent = ROOT
+            position = 0.000000 8.000000 0.000000
+        light21
+            parent = lineLight3
+            position = 4.000000 -2.000000 0.000000
+            material = line_segment_light_off
+            model = models/lineSegmentLight.osgt
+        light22
+            parent = lineLight3
+            position = -4.000000 -2.000000 0.000000
+            material = line_segment_light_off
+            model = models/lineSegmentLight.osgt
+        light23
+            parent = lineLight3
+            position = -4.000000 2.000000 0.000000
+            material = line_segment_light_off
+            model = models/lineSegmentLight.osgt
+        light24
+            parent = lineLight3
+            position = 4.000000 2.000000 0.000000
+            material = line_segment_light_off
+            model = models/lineSegmentLight.osgt
+        lineLight1
+            parent = ROOT
             position = 0.000000 -8.000000 0.000000
         light31
-            parent = lineLight3
+            parent = lineLight1
             position = 4.000000 -2.000000 0.000000
             material = line_segment_light_on
             model = models/lineSegmentLight.osgt
         light32
-            parent = lineLight3
+            parent = lineLight1
             position = -4.000000 -2.000000 0.000000
             material = line_segment_light_on
             model = models/lineSegmentLight.osgt
         light33
-            parent = lineLight3
+            parent = lineLight1
             position = -4.000000 2.000000 0.000000
             material = line_segment_light_on
             model = models/lineSegmentLight.osgt
         light34
-            parent = lineLight3
+            parent = lineLight1
             position = 4.000000 2.000000 0.000000
             material = line_segment_light_on
             model = models/lineSegmentLight.osgt
