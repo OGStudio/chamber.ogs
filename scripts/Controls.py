@@ -15,6 +15,7 @@ class ControlsImpl(object):
                           "lineLight2"]
         self.lightOn   = "line_segment_light_on"
         self.lightOff  = "line_segment_light_off"
+        self.signal    = "controlSignal"
         self.signalOn  = "control_signal_on"
         self.signalOff = "control_signal_off"
         self.nodeLeft  = "controlArrowLeft"
@@ -41,6 +42,15 @@ class ControlsImpl(object):
         st.set(keyNode, sceneName + "." + value)
         st.set(keyRun, "1")
         self.action.setState(st)
+    def onActionState(self, sceneName, actionName, state):
+        # Set signal material based on activity.
+        mat = self.signalOff
+        if (state):
+            mat = self.signalOn
+        key = "node.{0}.{1}.material".format(sceneName, self.signal)
+        st = pymjin2.State()
+        st.set(key, mat)
+        self.scene.setState(st)
     def processLineCommand(self, sceneName, cmd):
         if (cmd == self.nodeUp):
             self.switchLine(sceneName, False)
@@ -83,20 +93,19 @@ class ControlsImpl(object):
         self.currentLight = currentLight
 
 class ControlsListenerAction(pymjin2.ComponentListener):
-    def __init__(self, impl):
+    def __init__(self, impl, sceneName):
         pymjin2.ComponentListener.__init__(self)
         # Refer.
         self.impl = impl
+        self.sceneName = sceneName
     def __del__(self):
         # Derefer.
         self.impl = None
     def onComponentStateChange(self, st):
         for k in st.keys:
-            print "ListenerAction", k, st.value(k)
-#            v = k.split(".")
-#            sceneName = v[1]
-#            value = st.value(k)[0]
-#            self.impl.processLineCommand(sceneName, value)
+            actionName = k.replace(".active", "")
+            state = (st.value(k)[0] == "1")
+            self.impl.onActionState(self.sceneName, actionName, state)
 
 class ControlsListenerScene(pymjin2.ComponentListener):
     def __init__(self, impl):
@@ -122,7 +131,7 @@ class Controls:
         self.action    = action
         # Create.
         self.impl           = ControlsImpl(scene, action)
-        self.listenerAction = ControlsListenerAction(self.impl)
+        self.listenerAction = ControlsListenerAction(self.impl, sceneName)
         self.listenerScene  = ControlsListenerScene(self.impl)
         # Prepare.
         keys = ["{0}.active".format(self.impl.moveLeft),
