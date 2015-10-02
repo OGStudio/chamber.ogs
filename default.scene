@@ -154,7 +154,7 @@ node
             model = models/line_belt.osgt
         lineBelt2
             parent = ROOT
-            position = 3.000000 8.000000 0.000000
+            position = 3.000015 8.000000 0.000000
             material = line_belt
             model = models/line_belt.osgt
         lineBelt3
@@ -167,22 +167,22 @@ node
         light11
             parent = lineLight1
             position = 4.000000 -2.000000 0.000000
-            material = line_segment_light_on
+            material = line_segment_light_off
             model = models/lineSegmentLight.osgt
         light12
             parent = lineLight1
             position = -4.000000 -2.000000 0.000000
-            material = line_segment_light_on
+            material = line_segment_light_off
             model = models/lineSegmentLight.osgt
         light13
             parent = lineLight1
             position = -4.000000 2.000000 0.000000
-            material = line_segment_light_on
+            material = line_segment_light_off
             model = models/lineSegmentLight.osgt
         light14
             parent = lineLight1
             position = 4.000000 2.000000 0.000000
-            material = line_segment_light_on
+            material = line_segment_light_off
             model = models/lineSegmentLight.osgt
         lineLight2
             parent = ROOT
@@ -213,28 +213,29 @@ node
         light31
             parent = lineLight3
             position = 4.000000 -2.000000 0.000000
-            material = line_segment_light_off
+            material = line_segment_light_on
             model = models/lineSegmentLight.osgt
         light32
             parent = lineLight3
             position = -4.000000 -2.000000 0.000000
-            material = line_segment_light_off
+            material = line_segment_light_on
             model = models/lineSegmentLight.osgt
         light33
             parent = lineLight3
             position = -4.000000 2.000000 0.000000
-            material = line_segment_light_off
+            material = line_segment_light_on
             model = models/lineSegmentLight.osgt
         light34
             parent = lineLight3
             position = 4.000000 2.000000 0.000000
-            material = line_segment_light_off
+            material = line_segment_light_on
             model = models/lineSegmentLight.osgt
         control
             parent = ROOT
             position = 0.000000 13.000000 0.000000
             material = control
             model = models/control.osgt
+            script = scripts/Controls.py
         controlArrowDown
             parent = control
             position = 0.000000 0.000000 0.200000
@@ -260,5 +261,5 @@ node
             model = models/controlArrow.osgt
         controlSignal
             parent = control
-            material = control_signal
+            material = control_signal_off
             model = models/controlSignal.osgt

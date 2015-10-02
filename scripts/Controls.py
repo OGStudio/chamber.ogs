@@ -1,7 +1,7 @@
 
 import pymjin2
 
-class StandControlsImpl(object):
+class ControlsImpl(object):
     def __init__(self, scene, action):
         # Refer.
         self.scene  = scene
@@ -15,10 +15,12 @@ class StandControlsImpl(object):
                           "lineLight2"]
         self.lightOn   = "line_segment_light_on"
         self.lightOff  = "line_segment_light_off"
-        self.nodeLeft  = "arrowLeft"
-        self.nodeRight = "arrowRight"
-        self.nodeUp    = "arrowUp"
-        self.nodeDown  = "arrowDown"
+        self.signalOn  = "control_signal_on"
+        self.signalOff = "control_signal_off"
+        self.nodeLeft  = "controlArrowLeft"
+        self.nodeRight = "controlArrowRight"
+        self.nodeUp    = "controlArrowUp"
+        self.nodeDown  = "controlArrowDown"
         self.moveLeft  = "moveBy.default.moveBeltLeft"
         self.moveRight = "moveBy.default.moveBeltRight"
         # State.
@@ -28,7 +30,7 @@ class StandControlsImpl(object):
         self.scene  = None
         self.action = None
     def moveSelectedLine(self, sceneName, right):
-        print "moveSelectedLine", right
+        print "moveSelectedLine", "right" if right else "left"
         keyNode = "{0}.node".format(self.moveLeft)
         keyRun  = "{0}.active".format(self.moveLeft)
         if (right):
@@ -80,7 +82,23 @@ class StandControlsImpl(object):
         # Save new selection.
         self.currentLight = currentLight
 
-class StandControlsListenerScene(pymjin2.ComponentListener):
+class ControlsListenerAction(pymjin2.ComponentListener):
+    def __init__(self, impl):
+        pymjin2.ComponentListener.__init__(self)
+        # Refer.
+        self.impl = impl
+    def __del__(self):
+        # Derefer.
+        self.impl = None
+    def onComponentStateChange(self, st):
+        for k in st.keys:
+            print "ListenerAction", k, st.value(k)
+#            v = k.split(".")
+#            sceneName = v[1]
+#            value = st.value(k)[0]
+#            self.impl.processLineCommand(sceneName, value)
+
+class ControlsListenerScene(pymjin2.ComponentListener):
     def __init__(self, impl):
         pymjin2.ComponentListener.__init__(self)
         # Refer.
@@ -95,29 +113,37 @@ class StandControlsListenerScene(pymjin2.ComponentListener):
             value = st.value(k)[0]
             self.impl.processLineCommand(sceneName, value)
 
-class StandControls:
+class Controls:
     def __init__(self, sceneName, nodeName, scene, action):
         # Refer.
         self.sceneName = sceneName
         self.nodeName  = nodeName
         self.scene     = scene
+        self.action    = action
         # Create.
-        self.impl          = StandControlsImpl(scene, action)
-        self.listenerScene = StandControlsListenerScene(self.impl)
+        self.impl           = ControlsImpl(scene, action)
+        self.listenerAction = ControlsListenerAction(self.impl)
+        self.listenerScene  = ControlsListenerScene(self.impl)
         # Prepare.
+        keys = ["{0}.active".format(self.impl.moveLeft),
+                "{0}.active".format(self.impl.moveRight)]
+        self.action.addListener(keys, self.listenerAction)
         key = "selector.{0}.selectedNode".format(sceneName)
         self.scene.addListener([key], self.listenerScene)
     def __del__(self):
         # Tear down.
+        self.action.removeListener(self.listenerAction)
         self.scene.removeListener(self.listenerScene)
         # Destroy.
+        del self.listenerAction
         del self.listenerScene
         del self.impl
         # Derefer.
-        self.scene = None
+        self.scene  = None
+        self.action = None
 
 def SCRIPT_CREATE(sceneName, nodeName, scene, action):
-    return StandControls(sceneName, nodeName, scene, action)
+    return Controls(sceneName, nodeName, scene, action)
 
 def SCRIPT_DESTROY(instance):
     del instance

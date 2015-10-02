@@ -68,12 +68,10 @@
     <texture name="control_signal_n" template="textureTemplate">
         <file>pipeline/textures/control_signal_n.png</file>
     </texture>
+    <texture name="control_signal_glow" template="textureTemplate">
+        <file>pipeline/textures/control_signal_glow.png</file>
+    </texture>
     <texture name="control_arrow_n" template="textureTemplate">
         <file>pipeline/textures/control_arrow_n.png</file>
     </texture>
-
-    <texture name="control_tex2" template="textureTemplate">
-        <file>pipeline/textures/control_tex2.png</file>
-    </texture>
-
 </compositor>

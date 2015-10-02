@@ -107,10 +107,21 @@
             <value>1</value>
         </uniform>
     </material>
-    <material name="control_signal">
+    <material name="control_signal_off">
         <texture unit="0" varname="diffuseMap">control_tex</texture>
         <texture unit="1" varname="normalMap">control_signal_n</texture>
         <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
+    <material name="control_signal_on">
+        <texture unit="0" varname="diffuseMap">control_tex</texture>
+        <texture unit="1" varname="normalMap">control_signal_n</texture>
+        <texture unit="2" varname="glowMap">control_signal_glow</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+        <uniform name="useGlowMap" type="int">
             <value>1</value>
         </uniform>
     </material>
