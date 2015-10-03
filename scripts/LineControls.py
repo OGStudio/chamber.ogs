@@ -1,7 +1,7 @@
 
 import pymjin2
 
-class ControlsImpl(object):
+class LineControlsImpl(object):
     def __init__(self, scene, action):
         # Refer.
         self.scene  = scene
@@ -119,7 +119,7 @@ class ControlsImpl(object):
         # Save new selection.
         self.currentLight = currentLight
 
-class ControlsListenerAction(pymjin2.ComponentListener):
+class LineControlsListenerAction(pymjin2.ComponentListener):
     def __init__(self, impl, sceneName):
         pymjin2.ComponentListener.__init__(self)
         # Refer.
@@ -134,7 +134,7 @@ class ControlsListenerAction(pymjin2.ComponentListener):
             state = (st.value(k)[0] == "1")
             self.impl.onActionState(self.sceneName, actionName, state)
 
-class ControlsListenerScene(pymjin2.ComponentListener):
+class LineControlsListenerScene(pymjin2.ComponentListener):
     def __init__(self, impl):
         pymjin2.ComponentListener.__init__(self)
         # Refer.
@@ -149,7 +149,7 @@ class ControlsListenerScene(pymjin2.ComponentListener):
             value = st.value(k)[0]
             self.impl.processLineCommand(sceneName, value)
 
-class Controls:
+class LineControls:
     def __init__(self, sceneName, nodeName, scene, action):
         # Refer.
         self.sceneName = sceneName
@@ -157,9 +157,9 @@ class Controls:
         self.scene     = scene
         self.action    = action
         # Create.
-        self.impl           = ControlsImpl(scene, action)
-        self.listenerAction = ControlsListenerAction(self.impl, sceneName)
-        self.listenerScene  = ControlsListenerScene(self.impl)
+        self.impl           = LineControlsImpl(scene, action)
+        self.listenerAction = LineControlsListenerAction(self.impl, sceneName)
+        self.listenerScene  = LineControlsListenerScene(self.impl)
         # Prepare.
         keys = ["{0}.active".format(self.impl.moveLeft),
                 "{0}.active".format(self.impl.moveRight)]
@@ -179,7 +179,7 @@ class Controls:
         self.action = None
 
 def SCRIPT_CREATE(sceneName, nodeName, scene, action):
-    return Controls(sceneName, nodeName, scene, action)
+    return LineControls(sceneName, nodeName, scene, action)
 
 def SCRIPT_DESTROY(instance):
     del instance

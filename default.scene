@@ -135,9 +135,14 @@ node
             model = models/line_belt.osgt
         lineBelt1
             parent = ROOT
-            position = 3.000003 -8.000000 0.000000
+            position = 3.000005 -8.000000 0.000000
             material = line_belt
             model = models/line_belt.osgt
+        subject
+            parent = lineBelt1
+            position = 0.000000 0.000000 0.600000
+            material = subject
+            model = models/box.osgt
         lineLight2
             parent = ROOT
         light11
@@ -206,37 +211,37 @@ node
             position = 4.000000 2.000000 0.000000
             material = line_segment_light_on
             model = models/lineSegmentLight.osgt
-        control
+        controlLine
             parent = ROOT
-            position = 0.000000 13.000000 0.000000
+            position = 2.000000 13.000000 0.000000
             material = control
             model = models/control.osgt
-            script = scripts/Controls.py
+            script = scripts/LineControls.py
         controlArrowDown
-            parent = control
+            parent = controlLine
             position = 0.000000 0.000000 0.199998
             material = control_arrow
             model = models/controlArrow.osgt
         controlArrowUp
-            parent = control
-            position = 0.000000 0.000000 0.199998
+            parent = controlLine
+            position = 0.000000 0.000000 0.199999
             rotation = 0.000000 0.000000 180.000000
             material = control_arrow
             model = models/controlArrow.osgt
         controlArrowRight
-            parent = control
-            position = 0.000000 0.000000 0.200001
+            parent = controlLine
+            position = 0.000000 0.000000 0.199996
             rotation = 0.000000 0.000000 90.000000
             material = control_arrow
             model = models/controlArrow.osgt
         controlArrowLeft
-            parent = control
-            position = 0.000000 0.000000 0.200003
+            parent = controlLine
+            position = 0.000000 0.000000 0.199998
             rotation = 0.000000 0.000000 270.000000
             material = control_arrow
             model = models/controlArrow.osgt
         controlSignal
-            parent = control
+            parent = controlLine
             material = control_signal_off
             model = models/controlSignal.osgt
         processor
@@ -256,7 +261,7 @@ node
             model = models/processor.osgt
         crane_base
             parent = ROOT
-            position = 0.000000 0.000000 8.000000
+            position = 0.000000 0.000000 8.100000
             material = crane_base_off
             model = models/crane_base.osgt
         crane_arms_base
@@ -273,3 +278,115 @@ node
             parent = crane_arms_piston_base
             material = crane_arms_piston
             model = models/crane_arms_piston.osgt
+        rail_base_left
+            parent = ROOT
+            position = 4.500000 0.000000 7.000000
+            material = rail_base
+            model = models/rail_base.osgt
+        rail_base1
+            parent = rail_base_left
+            position = 0.000000 -4.000000 0.000000
+            material = rail_base
+            model = models/rail_base.osgt
+        rail_base2
+            parent = rail_base_left
+            position = 0.000000 -8.000000 0.000000
+            material = rail_base
+            model = models/rail_base.osgt
+        rail_base3
+            parent = rail_base_left
+            position = 0.000000 4.000000 0.000000
+            material = rail_base
+            model = models/rail_base.osgt
+        rail_base4
+            parent = rail_base_left
+            position = 0.000000 8.000000 0.000000
+            material = rail_base
+            model = models/rail_base.osgt
+        rail_base_right
+            parent = ROOT
+            position = -4.500000 0.000000 7.000000
+            material = rail_base
+            model = models/rail_base.osgt
+        c-rail_base1-69604015
+            parent = rail_base_right
+            position = 0.000000 -4.000000 0.000000
+            material = rail_base
+            model = models/rail_base.osgt
+        c-rail_base2-2608412099
+            parent = rail_base_right
+            position = 0.000000 -8.000000 0.000000
+            material = rail_base
+            model = models/rail_base.osgt
+        c-rail_base3-3241238126
+            parent = rail_base_right
+            position = 0.000000 4.000000 0.000000
+            material = rail_base
+            model = models/rail_base.osgt
+        c-rail_base4-813567713
+            parent = rail_base_right
+            position = 0.000000 8.000000 0.000000
+            material = rail_base
+            model = models/rail_base.osgt
+        rail_left
+            parent = ROOT
+            position = 4.500000 0.000000 8.000000
+            material = rail
+            model = models/rail.osgt
+        rail1
+            parent = rail_left
+            position = 0.000000 6.000000 0.000000
+            material = rail
+            model = models/rail.osgt
+        rail2
+            parent = rail_left
+            position = 0.000000 -6.000000 0.000000
+            material = rail
+            model = models/rail.osgt
+        rail_right
+            parent = ROOT
+            position = -4.500000 0.000000 8.000000
+            material = rail
+            model = models/rail.osgt
+        c-rail1-3540114429
+            parent = rail_right
+            position = 0.000000 6.000000 0.000000
+            material = rail
+            model = models/rail.osgt
+        c-rail2-1169795420
+            parent = rail_right
+            position = 0.000000 -6.000000 0.000000
+            material = rail
+            model = models/rail.osgt
+        controlCrane
+            parent = ROOT
+            position = -2.000000 13.000000 0.000000
+            material = control
+            model = models/control.osgt
+        controlCraneDown
+            parent = controlCrane
+            position = 0.000000 0.000000 0.199998
+            material = control_arrow
+            model = models/controlArrow.osgt
+        controlCraneUp
+            parent = controlCrane
+            position = 0.000000 0.000000 0.199999
+            rotation = 0.000000 0.000000 180.000000
+            material = control_arrow
+            model = models/controlArrow.osgt
+        controlCraneRight
+            parent = controlCrane
+            position = 0.000000 0.000000 0.199996
+            rotation = 0.000000 0.000000 90.000000
+            material = control_arrow
+            model = models/controlArrow.osgt
+        controlCraneLeft
+            parent = controlCrane
+            position = 0.000000 0.000000 0.199999
+            rotation = 0.000000 0.000000 270.000000
+            material = control_arrow
+            model = models/controlArrow.osgt
+        controlCraneSign
+            parent = controlCrane
+            material = control_signal_off
+            model = models/controlSignal.osgt

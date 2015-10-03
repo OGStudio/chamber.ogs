@@ -1,0 +1,13 @@
+
+Type of LowPoly2 is MESH
+exporting object LowPoly2
+mesh_object is LowPoly2
+mesh LowPoly2 without material
+vertexes reduced from 168 to 116
+faces 45
+uvs channels 1 - dict_keys(['UVMap'])
+------------------------------
+vertex groups False False 
+geode GeodeLowPoly2
+write file to /home/kornerr/p/ogstudio/chamber.ogs/models/processor.osgt
+Check log file /home/kornerr/p/ogstudio/chamber.ogs/models/processor.log

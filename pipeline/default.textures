@@ -107,4 +107,13 @@
     <texture name="crane_base_glow" template="textureTemplate">
         <file>pipeline/textures/crane_base_glow.png</file>
     </texture>
+    <texture name="rail_tex" template="textureTemplate">
+        <file>pipeline/textures/rail_tex.png</file>
+    </texture>
+    <texture name="rail_n" template="textureTemplate">
+        <file>pipeline/textures/rail_n.png</file>
+    </texture>
+    <texture name="rail_base_n" template="textureTemplate">
+        <file>pipeline/textures/rail_base_n.png</file>
+    </texture>
 </compositor>

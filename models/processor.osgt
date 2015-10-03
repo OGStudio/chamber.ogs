@@ -3,19 +3,19 @@
 #Generator osgexport 0.13.0
 
 osg::Group {
-  UniqueID 4
+  UniqueID 14
   Name "Root"
   Children 1 {
     osg::MatrixTransform {
-      UniqueID 0
+      UniqueID 10
       Name "LowPoly2"
       Children 1 {
         osg::Geode {
-          UniqueID 3
+          UniqueID 13
           Name "GeodeLowPoly2"
           Drawables 1 {
             osg::Geometry {
-              UniqueID 2
+              UniqueID 12
               Name "LowPoly2"
               PrimitiveSetList 2 {
                   DrawElementsUInt GL_TRIANGLES 36 {
@@ -69,7 +69,7 @@ osg::Group {
                   }
               }
               VertexData {
-                Array TRUE ArrayID 0 Vec3fArray 116 {
+                Array TRUE ArrayID 6 Vec3fArray 116 {
                   0.00000 2.00000 2.00000
                   0.00000 -2.00000 2.00000
                   0.57403 -2.00000 1.88582
@@ -192,7 +192,7 @@ osg::Group {
                 Normalize 0
               }
               NormalData {
-                Array TRUE ArrayID 1 Vec3fArray 116 {
+                Array TRUE ArrayID 7 Vec3fArray 116 {
                   0.00000 0.00000 1.00000
                   0.00000 0.00000 1.00000
                   0.38267 0.00000 0.92386
@@ -316,7 +316,7 @@ osg::Group {
               }
               TexCoordData 1 {
                 Data {
-                  Array TRUE ArrayID 2 Vec2fArray 116 {
+                  Array TRUE ArrayID 8 Vec2fArray 116 {
                     0.11779 0.51000
                     0.11779 0.85000
                     0.06900 0.85000

@@ -189,4 +189,18 @@
             <value>1</value>
         </uniform>
     </material>
+    <material name="rail_base">
+        <texture unit="0" varname="diffuseMap">cement</texture>
+        <texture unit="1" varname="normalMap">rail_base_n</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
+    <material name="rail">
+        <texture unit="0" varname="diffuseMap">rail_tex</texture>
+        <texture unit="1" varname="normalMap">rail_n</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
 </compositor>
