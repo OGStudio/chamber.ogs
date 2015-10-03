@@ -139,4 +139,54 @@
             <value>1</value>
         </uniform>
     </material>
+    <material name="crane_base_off">
+        <texture unit="0" varname="diffuseMap">crane_base_tex</texture>
+        <texture unit="1" varname="normalMap">crane_base_n</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
+    <material name="crane_base_on">
+        <texture unit="0" varname="diffuseMap">crane_base_tex</texture>
+        <texture unit="1" varname="normalMap">crane_base_n</texture>
+        <texture unit="2" varname="glowMap">crane_base_glow</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+        <uniform name="useGlowMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
+    <material name="crane_arms_base">
+        <texture unit="0" varname="diffuseMap">crane_base_tex</texture>
+        <texture unit="1" varname="normalMap">crane_arms_base_n</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
+    <material name="crane_arms_piston_base_off">
+        <texture unit="0" varname="diffuseMap">crane_arms_piston_base_tex</texture>
+        <texture unit="1" varname="normalMap">crane_arms_piston_base_n</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
+    <material name="crane_arms_piston_base_on">
+        <texture unit="0" varname="diffuseMap">crane_arms_piston_base_tex</texture>
+        <texture unit="1" varname="normalMap">crane_arms_piston_base_n</texture>
+        <texture unit="2" varname="glowMap">crane_arms_piston_base_glow</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+        <uniform name="useGlowMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
+    <material name="crane_arms_piston">
+        <texture unit="0" varname="diffuseMap">crane_arms_piston_tex</texture>
+        <texture unit="1" varname="normalMap">crane_arms_piston_n</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
 </compositor>

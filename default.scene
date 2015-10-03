@@ -135,7 +135,7 @@ node
             model = models/line_belt.osgt
         lineBelt1
             parent = ROOT
-            position = 3.000002 -8.000000 0.000000
+            position = 3.000003 -8.000000 0.000000
             material = line_belt
             model = models/line_belt.osgt
         lineLight2
@@ -214,7 +214,7 @@ node
             script = scripts/Controls.py
         controlArrowDown
             parent = control
-            position = 0.000000 0.000000 0.199999
+            position = 0.000000 0.000000 0.199998
             material = control_arrow
             model = models/controlArrow.osgt
         controlArrowUp
@@ -225,13 +225,13 @@ node
             model = models/controlArrow.osgt
         controlArrowRight
             parent = control
-            position = 0.000000 0.000000 0.199998
+            position = 0.000000 0.000000 0.200001
             rotation = 0.000000 0.000000 90.000000
             material = control_arrow
             model = models/controlArrow.osgt
         controlArrowLeft
             parent = control
-            position = 0.000000 0.000000 0.200001
+            position = 0.000000 0.000000 0.200003
             rotation = 0.000000 0.000000 270.000000
             material = control_arrow
             model = models/controlArrow.osgt
@@ -254,3 +254,22 @@ node
             position = 8.000000 0.000000 0.000000
             material = processor
             model = models/processor.osgt
+        crane_base
+            parent = ROOT
+            position = 0.000000 0.000000 8.000000
+            material = crane_base_off
+            model = models/crane_base.osgt
+        crane_arms_base
+            parent = crane_base
+            position = 0.000000 0.000000 -0.200000
+            material = crane_arms_base
+            model = models/crane_arms_base.osgt
+        crane_arms_piston_base
+            parent = crane_arms_base
+            position = 0.000000 0.000000 -0.600000
+            material = crane_base_off
+            model = models/crane_arms_piston_base.osgt
+        crane_arms_piston
+            parent = crane_arms_piston_base
+            material = crane_arms_piston
+            model = models/crane_arms_piston.osgt

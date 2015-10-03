@@ -80,4 +80,31 @@
     <texture name="processor_tex" template="textureTemplate">
         <file>pipeline/textures/processor_tex.png</file>
     </texture>
+    <texture name="crane_arms_base_n" template="textureTemplate">
+        <file>pipeline/textures/crane_arms_base_n.png</file>
+    </texture>
+    <texture name="crane_arms_piston_base_n" template="textureTemplate">
+        <file>pipeline/textures/crane_arms_piston_base_n.png</file>
+    </texture>
+    <texture name="crane_arms_piston_base_tex" template="textureTemplate">
+        <file>pipeline/textures/crane_arms_piston_base_tex.png</file>
+    </texture>
+    <texture name="crane_arms_piston_base_glow" template="textureTemplate">
+        <file>pipeline/textures/crane_arms_piston_base_glow.png</file>
+    </texture>
+    <texture name="crane_arms_piston_n" template="textureTemplate">
+        <file>pipeline/textures/crane_arms_piston_n.png</file>
+    </texture>
+    <texture name="crane_arms_piston_tex" template="textureTemplate">
+        <file>pipeline/textures/crane_arms_piston_tex.png</file>
+    </texture>
+    <texture name="crane_base_n" template="textureTemplate">
+        <file>pipeline/textures/crane_base_n.png</file>
+    </texture>
+    <texture name="crane_base_tex" template="textureTemplate">
+        <file>pipeline/textures/crane_base_tex.png</file>
+    </texture>
+    <texture name="crane_base_glow" template="textureTemplate">
+        <file>pipeline/textures/crane_base_glow.png</file>
+    </texture>
 </compositor>
