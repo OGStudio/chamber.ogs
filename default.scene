@@ -5,25 +5,6 @@ node
             parent = ROOT
             position = 0.000000 15.000000 15.000000
             light = default
-        left
-            parent = ROOT
-            position = -2.000000 0.000000 3.000000
-            material = subject
-            model = models/box.osgt
-        subleft
-            parent = left
-            position = 0.000000 0.000000 -1.000000
-            material = simple_box
-            model = models/box.osgt
-        right
-            parent = ROOT
-            position = 2.000000 0.000000 1.000000
-            material = subjectRed
-            model = models/box.osgt
-        subright
-            parent = right
-            position = 1.000000 0.000000 0.000000
-            model = models/box.osgt
         floor
             parent = ROOT
             material = floor
@@ -61,11 +42,6 @@ node
             position = -10.000000 0.000000 0.000000
             material = column
             model = models/line_segment.osgt
-        center
-            parent = ROOT
-            position = 0.000000 1.000000 1.000000
-            material = simple_box
-            model = models/box.osgt
         line3
             parent = ROOT
             position = 0.000000 8.000000 0.000000
@@ -159,7 +135,7 @@ node
             model = models/line_belt.osgt
         lineBelt1
             parent = ROOT
-            position = 3.000001 -8.000000 0.000000
+            position = 3.000002 -8.000000 0.000000
             material = line_belt
             model = models/line_belt.osgt
         lineLight2
@@ -238,24 +214,24 @@ node
             script = scripts/Controls.py
         controlArrowDown
             parent = control
-            position = 0.000000 0.000000 0.200000
+            position = 0.000000 0.000000 0.199999
             material = control_arrow
             model = models/controlArrow.osgt
         controlArrowUp
             parent = control
-            position = 0.000000 0.000000 0.200000
+            position = 0.000000 0.000000 0.199998
             rotation = 0.000000 0.000000 180.000000
             material = control_arrow
             model = models/controlArrow.osgt
         controlArrowRight
             parent = control
-            position = 0.000000 0.000000 0.200000
+            position = 0.000000 0.000000 0.199998
             rotation = 0.000000 0.000000 90.000000
             material = control_arrow
             model = models/controlArrow.osgt
         controlArrowLeft
             parent = control
-            position = 0.000000 0.000000 0.200000
+            position = 0.000000 0.000000 0.200001
             rotation = 0.000000 0.000000 270.000000
             material = control_arrow
             model = models/controlArrow.osgt
@@ -263,3 +239,18 @@ node
             parent = control
             material = control_signal_off
             model = models/controlSignal.osgt
+        processor
+            parent = ROOT
+            rotation = 0.000000 0.000000 90.000000
+            material = processor
+            model = models/processor.osgt
+        processorUp
+            parent = processor
+            position = -8.000000 0.000000 0.000000
+            material = processor
+            model = models/processor.osgt
+        processorDown
+            parent = processor
+            position = 8.000000 0.000000 0.000000
+            material = processor
+            model = models/processor.osgt

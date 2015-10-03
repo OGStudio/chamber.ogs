@@ -74,4 +74,10 @@
     <texture name="control_arrow_n" template="textureTemplate">
         <file>pipeline/textures/control_arrow_n.png</file>
     </texture>
+    <texture name="processor_n" template="textureTemplate">
+        <file>pipeline/textures/processor_n.png</file>
+    </texture>
+    <texture name="processor_tex" template="textureTemplate">
+        <file>pipeline/textures/processor_tex.png</file>
+    </texture>
 </compositor>

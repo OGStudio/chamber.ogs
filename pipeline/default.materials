@@ -132,4 +132,11 @@
             <value>1</value>
         </uniform>
     </material>
+    <material name="processor">
+        <texture unit="0" varname="diffuseMap">processor_tex</texture>
+        <texture unit="1" varname="normalMap">processor_n</texture>
+        <uniform name="useNormalMap" type="int">
+            <value>1</value>
+        </uniform>
+    </material>
 </compositor>
