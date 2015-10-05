@@ -22,6 +22,8 @@ class CraneControlsImpl(object):
         if (not state):
             if (actionName == self.pressButtonSeq):
                 self.canPressButton = True
+            elif (actionName == self.moveButtonDown):
+                print "execute button action"
     def onSelection(self, sceneName, nodeName):
         if (nodeName in self.buttons):
             self.pressButton(sceneName, nodeName)
@@ -94,7 +96,8 @@ class CraneControls:
         self.listenerScene  = CraneControlsListenerScene(self.impl)
         # Prepare.
         self.impl.setupButtons(sceneName, nodeName)
-        keys = ["{0}.active".format(self.impl.pressButtonSeq)]
+        keys = ["{0}.active".format(self.impl.pressButtonSeq),
+                "{0}.active".format(self.impl.moveButtonDown)]
         self.action.addListener(keys, self.listenerAction)
         key = "selector.{0}.selectedNode".format(sceneName)
         self.scene.addListener([key], self.listenerScene)
