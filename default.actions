@@ -4,6 +4,12 @@ delay
             delay = 5000
 moveBy
     default
+        moveButtonDown
+            point = 0 0 0 0
+            point = 150 0 0 -0.1
+        moveButtonUp
+            point = 0 0 0 0
+            point = 150 0 0 0.1
         pressArrow
             point = 0 0 0 0
             point = 150 0 0 -0.1
@@ -80,6 +86,9 @@ sequence
             action = delay.blinkDelay
             action = script.rotateMaterial
             action = spawn.moveForwardAndShake
+        pressButton
+            action = moveBy.moveButtonDown
+            action = moveBy.moveButtonUp
 repeat
     default
         mainSeqTwice

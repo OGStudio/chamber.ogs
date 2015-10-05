@@ -358,35 +358,36 @@ node
             position = 0.000000 -6.000000 0.000000
             material = rail
             model = models/rail.osgt
-        controlCrane
+        craneControl
             parent = ROOT
             position = -2.000000 13.000000 0.000000
             material = control
             model = models/control.osgt
-        controlCraneDown
-            parent = controlCrane
+            script = scripts/CraneControls.py
+        craneControlDown
+            parent = craneControl
             position = 0.000000 0.000000 0.199998
             material = control_arrow
             model = models/controlArrow.osgt
-        controlCraneUp
-            parent = controlCrane
+        craneControlUp
+            parent = craneControl
             position = 0.000000 0.000000 0.199999
             rotation = 0.000000 0.000000 180.000000
             material = control_arrow
             model = models/controlArrow.osgt
-        controlCraneRight
-            parent = controlCrane
+        craneControlRight
+            parent = craneControl
             position = 0.000000 0.000000 0.199996
             rotation = 0.000000 0.000000 90.000000
             material = control_arrow
             model = models/controlArrow.osgt
-        controlCraneLeft
-            parent = controlCrane
+        craneControlLeft
+            parent = craneControl
             position = 0.000000 0.000000 0.199999
             rotation = 0.000000 0.000000 270.000000
             material = control_arrow
             model = models/controlArrow.osgt
-        controlCraneSign
-            parent = controlCrane
+        craneControlSignal
+            parent = craneControl
             material = control_signal_off
             model = models/controlSignal.osgt
