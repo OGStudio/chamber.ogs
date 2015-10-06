@@ -15,13 +15,18 @@ class CraneControls:
         self.action       = action
         self.dependencies = dependencies
         # Create.
-        module = self.dependencies[CRANE_CONTROLS_DEPENDENCY_CONTROL_BUTTONS]
-        self.controlButtons = module.ControlButtons(sceneName, nodeName, scene, action)
         module = self.dependencies[CRANE_CONTROLS_DEPENDENCY_CRANE]
         self.crane = module.Crane(sceneName, nodeName, scene, action)
+        module = self.dependencies[CRANE_CONTROLS_DEPENDENCY_CONTROL_BUTTONS]
+        self.controlButtons = module.ControlButtons(sceneName, nodeName, scene, action)
         # Prepare.
         self.controlButtons.addListener(self)
         self.crane.addListener(self)
+        # Postfixes.
+        self.buttonPostfixDown  = module.CONTROL_BUTTONS_POSTFIX_DOWN
+        self.buttonPostfixLeft  = module.CONTROL_BUTTONS_POSTFIX_LEFT
+        self.buttonPostfixRight = module.CONTROL_BUTTONS_POSTFIX_RIGHT
+        self.buttonPostfixUp    = module.CONTROL_BUTTONS_POSTFIX_UP
     def __del__(self):
         # Tear down.
         self.controlButtons.removeListener(self)
@@ -35,10 +40,14 @@ class CraneControls:
         self.dependencies = None
     def onControlButtonsExecute(self, sceneName, nodeName):
         print "onControlButtonsExecute", sceneName, nodeName
-        if (nodeName.endswith("Up")):
+        if (nodeName.endswith(self.buttonPostfixUp)):
             self.crane.moveUp(True)
-        elif (nodeName.endswith("Down")):
+        elif (nodeName.endswith(self.buttonPostfixDown)):
             self.crane.moveUp(False)
+        elif (nodeName.endswith(self.buttonPostfixLeft)):
+            self.crane.moveRight(False)
+        elif (nodeName.endswith(self.buttonPostfixRight)):
+            self.crane.moveRight(True)
     def onCraneMoveUp(self, up, state):
         self.setSignalState(state)
     def setSignalState(self, state):

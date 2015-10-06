@@ -5,6 +5,10 @@ import pymjin2
 CONTROL_BUTTONS_MOVE_BUTTON_DOWN = "moveBy.default.moveButtonDown"
 CONTROL_BUTTONS_MOVE_BUTTON_UP   = "moveBy.default.moveButtonUp"
 CONTROL_BUTTONS_PRESS_BUTTON     = "sequence.default.pressButton"
+CONTROL_BUTTONS_POSTFIX_DOWN     = "Down"
+CONTROL_BUTTONS_POSTFIX_LEFT     = "Left"
+CONTROL_BUTTONS_POSTFIX_RIGHT    = "Right"
+CONTROL_BUTTONS_POSTFIX_UP       = "Up"
 
 class ControlButtonsImpl(object):
     def __init__(self, scene, action, listeners):
@@ -56,10 +60,10 @@ class ControlButtonsImpl(object):
         for k in st.keys:
             children = st.value(k)
             for c in children:
-                if (c.endswith("Up")   or
-                    c.endswith("Down") or
-                    c.endswith("Left") or
-                    c.endswith("Right")):
+                if (c.endswith(CONTROL_BUTTONS_POSTFIX_UP)   or
+                    c.endswith(CONTROL_BUTTONS_POSTFIX_DOWN) or
+                    c.endswith(CONTROL_BUTTONS_POSTFIX_LEFT) or
+                    c.endswith(CONTROL_BUTTONS_POSTFIX_RIGHT)):
                     self.buttons.append(c)
 
 class ControlButtonsListenerAction(pymjin2.ComponentListener):

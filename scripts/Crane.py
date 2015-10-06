@@ -2,10 +2,13 @@
 import pymjin2
 
 # Setup.
-CRANE           = "crane_base"
-CRANE_MOVE_DOWN = "moveBy.default.moveCraneDown"
-CRANE_MOVE_UP   = "moveBy.default.moveCraneUp"
-CRANE_STEPS_H   = 3
+CRANE            = "crane_base"
+CRANE_ARMS_BASE  = "crane_arms_base"
+CRANE_MOVE_DOWN  = "moveBy.default.moveCraneDown"
+CRANE_MOVE_LEFT  = "moveBy.default.moveBeltLeft"
+CRANE_MOVE_RIGHT = "moveBy.default.moveBeltRight"
+CRANE_MOVE_UP    = "moveBy.default.moveCraneUp"
+CRANE_STEPS_H    = 3
 
 class CraneImpl(object):
     def __init__(self, scene, action, listeners):
@@ -30,25 +33,24 @@ class CraneImpl(object):
             (actionName == CRANE_MOVE_DOWN)):
             for listener in self.listeners:
                 listener.onCraneMoveUp(actionName == CRANE_MOVE_UP, state)
+    def moveRight(self, right):
+        if (not self.canMove):
+            return
+        if (not self.validateNewStepV(up)):
+            return
+        self.canMove = False
+        st = pymjin2.State()
+        key = "{0}.active".format(CRANE_MOVE_RIGHT if right else CRANE_MOVE_LEFT)
+        st.set(key, "1")
+        self.action.setState(st)
     def moveUp(self, up):
         if (not self.canMove):
             return
-        # Check new step.
-        newStepH = self.stepH - 1 if up else self.stepH + 1
-        ok = False
-        if (up):
-            ok = (newStepH >= 0)
-        else:
-            ok = (newStepH < CRANE_STEPS_H)
-        if (not ok):
+        if (not self.validateNewStepH(up)):
             return
-        self.stepH = newStepH
-        # Move.
         self.canMove = False
         st = pymjin2.State()
-        key = "{0}.active".format(CRANE_MOVE_UP)
-        if (not up):
-            key = "{0}.active".format(CRANE_MOVE_DOWN)
+        key = "{0}.active".format(CRANE_MOVE_UP if up else CRANE_MOVE_DOWN)
         st.set(key, "1")
         self.action.setState(st)
     def setupNodes(self, sceneName, nodeName):
@@ -56,7 +58,21 @@ class CraneImpl(object):
         st = pymjin2.State()
         st.set("{0}.node".format(CRANE_MOVE_DOWN), self.craneName)
         st.set("{0}.node".format(CRANE_MOVE_UP), self.craneName)
+        # Locate crane arms' base.
+
         self.action.setState(st)
+    def validateNewStepH(self, up):
+        newStepH = self.stepH - 1 if up else self.stepH + 1
+        ok = False
+        if (up):
+            ok = (newStepH >= 0)
+        else:
+            ok = (newStepH < CRANE_STEPS_H)
+        if (ok):
+            self.stepH = newStepH
+        return ok
+    def validateNewStepV(self, right):
+        return True
 
 class CraneListenerAction(pymjin2.ComponentListener):
     def __init__(self, impl, sceneName):
@@ -99,6 +115,8 @@ class Crane:
         self.action = None
     def addListener(self, listener):
         self.listeners[listener] = True
+    def moveRight(self, right):
+        self.impl.moveRight(right)
     def moveUp(self, up):
         self.impl.moveUp(up)
     def removeListener(self, listener):
