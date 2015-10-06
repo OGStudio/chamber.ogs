@@ -7,30 +7,37 @@ CONTROL_BUTTONS_MOVE_BUTTON_UP   = "moveBy.default.moveButtonUp"
 CONTROL_BUTTONS_PRESS_BUTTON     = "sequence.default.pressButton"
 
 class ControlButtonsImpl(object):
-    def __init__(self, scene, action):
+    def __init__(self, scene, action, listeners):
         # Refer.
-        self.scene  = scene
-        self.action = action
+        self.scene     = scene
+        self.action    = action
+        self.listeners = listeners
         # State.
-        self.buttons = []
-        self.canPressButton = True
+        self.buttons          = []
+        self.pressedNodeName  = None
+        self.pressedSceneName = None
     def __del__(self):
         # Derefer.
-        self.scene  = None
-        self.action = None
+        self.scene     = None
+        self.action    = None
+        self.listeners = None
     def onActionState(self, sceneName, actionName, state):
         if (not state):
             if (actionName == CONTROL_BUTTONS_PRESS_BUTTON):
-                self.canPressButton = True
+                self.pressedNodeName  = None
+                self.pressedSceneName = None
             elif (actionName == CONTROL_BUTTONS_MOVE_BUTTON_DOWN):
-                print "execute button action"
+                for listener in self.listeners:
+                    listener.onControlButtonsExecute(self.pressedSceneName,
+                                                     self.pressedNodeName)
     def onSelection(self, sceneName, nodeName):
         if (nodeName in self.buttons):
             self.pressButton(sceneName, nodeName)
     def pressButton(self, sceneName, nodeName):
-        if (not self.canPressButton):
+        if (self.pressedNodeName):
             return
-        self.canPressButton = False
+        self.pressedSceneName = sceneName
+        self.pressedNodeName  = nodeName
         node = sceneName + "." + nodeName
         st = pymjin2.State()
         # Assign actions.
@@ -92,7 +99,8 @@ class ControlButtons:
         self.scene     = scene
         self.action    = action
         # Create.
-        self.impl           = ControlButtonsImpl(scene, action)
+        self.listeners      = {}
+        self.impl           = ControlButtonsImpl(scene, action, self.listeners)
         self.listenerAction = ControlButtonsListenerAction(self.impl, sceneName)
         self.listenerScene  = ControlButtonsListenerScene(self.impl)
         # Prepare.
@@ -113,4 +121,9 @@ class ControlButtons:
         # Derefer.
         self.scene  = None
         self.action = None
+    def addListener(self, listener):
+        self.listeners[listener] = True
+    def removeListener(self, listener):
+        if (listener is self.listeners):
+            del self.listeners[listener]
 
