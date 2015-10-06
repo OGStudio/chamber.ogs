@@ -5,6 +5,7 @@ import pymjin2
 CRANE           = "crane_base"
 CRANE_MOVE_DOWN = "moveBy.default.moveCraneDown"
 CRANE_MOVE_UP   = "moveBy.default.moveCraneUp"
+CRANE_STEPS_H   = 3
 
 class CraneImpl(object):
     def __init__(self, scene, action, listeners):
@@ -14,50 +15,42 @@ class CraneImpl(object):
         self.listeners = listeners
         # State.
         self.craneName = None
+        self.canMove   = True
+        self.stepH     = 1
     def __del__(self):
         # Derefer.
         self.scene     = None
         self.action    = None
         self.listeners = None
-#    def onActionState(self, sceneName, actionName, state):
-#        if (not state):
-#            if (actionName == CONTROL_BUTTONS_PRESS_BUTTON):
-#                self.pressedNodeName  = None
-#                self.pressedSceneName = None
-#            elif (actionName == CONTROL_BUTTONS_MOVE_BUTTON_DOWN):
-#                for listener in self.listeners:
-#                    listener.onCraneExecute(self.pressedSceneName,
-#                                                     self.pressedNodeName)
-#    def onSelection(self, sceneName, nodeName):
-#        if (nodeName in self.buttons):
-#            self.pressButton(sceneName, nodeName)
+    def onActionState(self, sceneName, actionName, state):
+        print "Crane.onActionState", actionName, state
+        if (not state):
+            self.canMove = True
+            if ((actionName == CRANE_MOVE_UP) or
+                (actionName == CRANE_MOVE_DOWN)):
+                for listener in self.listeners:
+                    listener.onCraneMoveUp(actionName == CRANE_MOVE_UP)
     def moveUp(self, up):
-        print "move crane up:", up
+        if (not self.canMove):
+            return
+        # Check new step.
+        newStepH = self.stepH - 1 if up else self.stepH + 1
+        ok = False
+        if (up):
+            ok = (newStepH >= 0)
+        else:
+            ok = (newStepH < CRANE_STEPS_H)
+        if (not ok):
+            return
+        self.stepH = newStepH
+        # Move.
+        self.canMove = False
         st = pymjin2.State()
         key = "{0}.active".format(CRANE_MOVE_UP)
         if (not up):
             key = "{0}.active".format(CRANE_MOVE_DOWN)
         st.set(key, "1")
         self.action.setState(st)
-        # TODO: temporarily.
-#        for listener in self.listeners:
-#            listener.onCraneMoveUp(up)
-#    def pressButton(self, sceneName, nodeName):
-#        if (self.pressedNodeName):
-#            return
-#        self.pressedSceneName = sceneName
-#        self.pressedNodeName  = nodeName
-#        node = sceneName + "." + nodeName
-#        st = pymjin2.State()
-#        # Assign actions.
-#        key = "{0}.node".format(CONTROL_BUTTONS_MOVE_BUTTON_UP)
-#        st.set(key, node)
-#        key = "{0}.node".format(CONTROL_BUTTONS_MOVE_BUTTON_DOWN)
-#        st.set(key, node)
-#        # Run.
-#        key = "{0}.active".format(CONTROL_BUTTONS_PRESS_BUTTON)
-#        st.set(key, "1")
-#        self.action.setState(st)
     def setupNodes(self, sceneName, nodeName):
         self.craneName = sceneName + "." + nodeName
         st = pymjin2.State()
@@ -65,35 +58,20 @@ class CraneImpl(object):
         st.set("{0}.node".format(CRANE_MOVE_UP), self.craneName)
         self.action.setState(st)
 
-#class CraneListenerAction(pymjin2.ComponentListener):
-#    def __init__(self, impl, sceneName):
-#        pymjin2.ComponentListener.__init__(self)
-#        # Refer.
-#        self.impl = impl
-#        self.sceneName = sceneName
-#    def __del__(self):
-#        # Derefer.
-#        self.impl = None
-#    def onComponentStateChange(self, st):
-#        for k in st.keys:
-#            actionName = k.replace(".active", "")
-#            state = (st.value(k)[0] == "1")
-#            self.impl.onActionState(self.sceneName, actionName, state)
-#
-#class CraneListenerScene(pymjin2.ComponentListener):
-#    def __init__(self, impl):
-#        pymjin2.ComponentListener.__init__(self)
-#        # Refer.
-#        self.impl = impl
-#    def __del__(self):
-#        # Derefer.
-#        self.impl = None
-#    def onComponentStateChange(self, st):
-#        for k in st.keys:
-#            v = k.split(".")
-#            sceneName = v[1]
-#            nodeName = st.value(k)[0]
-#            self.impl.onSelection(sceneName, nodeName)
+class CraneListenerAction(pymjin2.ComponentListener):
+    def __init__(self, impl, sceneName):
+        pymjin2.ComponentListener.__init__(self)
+        # Refer.
+        self.impl = impl
+        self.sceneName = sceneName
+    def __del__(self):
+        # Derefer.
+        self.impl = None
+    def onComponentStateChange(self, st):
+        for k in st.keys:
+            actionName = k.replace(".active", "")
+            state = (st.value(k)[0] == "1")
+            self.impl.onActionState(self.sceneName, actionName, state)
 
 class Crane:
     def __init__(self, sceneName, nodeName, scene, action):
@@ -104,22 +82,17 @@ class Crane:
         # Create.
         self.listeners      = {}
         self.impl           = CraneImpl(scene, action, self.listeners)
-#        self.listenerAction = CraneListenerAction(self.impl, sceneName)
-#        self.listenerScene  = CraneListenerScene(self.impl)
+        self.listenerAction = CraneListenerAction(self.impl, sceneName)
         # Prepare.
         self.impl.setupNodes(sceneName, CRANE)
-#        keys = ["{0}.active".format(CONTROL_BUTTONS_PRESS_BUTTON),
-#                "{0}.active".format(CONTROL_BUTTONS_MOVE_BUTTON_DOWN)]
-#        self.action.addListener(keys, self.listenerAction)
-#        key = "selector.{0}.selectedNode".format(sceneName)
-#        self.scene.addListener([key], self.listenerScene)
+        keys = ["{0}.active".format(CRANE_MOVE_DOWN),
+                "{0}.active".format(CRANE_MOVE_UP)]
+        self.action.addListener(keys, self.listenerAction)
     def __del__(self):
         # Tear down.
-#        self.action.removeListener(self.listenerAction)
-#        self.scene.removeListener(self.listenerScene)
-#        # Destroy.
-#        del self.listenerAction
-#        del self.listenerScene
+        self.action.removeListener(self.listenerAction)
+        # Destroy.
+        del self.listenerAction
         del self.impl
         # Derefer.
         self.scene  = None
