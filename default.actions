@@ -4,6 +4,12 @@ delay
             delay = 5000
 moveBy
     default
+        moveCraneUp
+            point = 0 0 0 0
+            point = 8000 0 -8 0
+        moveCraneDown
+            point = 0 0 0 0
+            point = 8000 0 8 0
         moveButtonDown
             point = 0 0 0 0
             point = 150 0 0 -0.1
