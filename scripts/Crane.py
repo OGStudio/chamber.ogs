@@ -26,10 +26,10 @@ class CraneImpl(object):
         print "Crane.onActionState", actionName, state
         if (not state):
             self.canMove = True
-            if ((actionName == CRANE_MOVE_UP) or
-                (actionName == CRANE_MOVE_DOWN)):
-                for listener in self.listeners:
-                    listener.onCraneMoveUp(actionName == CRANE_MOVE_UP)
+        if ((actionName == CRANE_MOVE_UP) or
+            (actionName == CRANE_MOVE_DOWN)):
+            for listener in self.listeners:
+                listener.onCraneMoveUp(actionName == CRANE_MOVE_UP, state)
     def moveUp(self, up):
         if (not self.canMove):
             return

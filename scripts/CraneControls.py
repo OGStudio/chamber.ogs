@@ -3,6 +3,9 @@ import pymjin2
 
 CRANE_CONTROLS_DEPENDENCY_CONTROL_BUTTONS = "scripts/ControlButtons.py"
 CRANE_CONTROLS_DEPENDENCY_CRANE           = "scripts/Crane.py"
+CRANE_CONTROLS_SIGNAL                     = "craneControlSignal"
+CRANE_CONTROLS_SIGNAL_MATERIAL_ON         = "control_signal_on"
+CRANE_CONTROLS_SIGNAL_MATERIAL_OFF        = "control_signal_off"
 
 class CraneControls:
     def __init__(self, sceneName, nodeName, scene, action, dependencies):
@@ -36,8 +39,17 @@ class CraneControls:
             self.crane.moveUp(True)
         elif (nodeName.endswith("Down")):
             self.crane.moveUp(False)
-    def onCraneMoveUp(self, up):
-        print "onCraneMoveUp", up
+    def onCraneMoveUp(self, up, state):
+        self.setSignalState(state)
+    def setSignalState(self, state):
+        mat = CRANE_CONTROLS_SIGNAL_MATERIAL_OFF
+        if (state):
+            mat = CRANE_CONTROLS_SIGNAL_MATERIAL_ON
+        st = pymjin2.State()
+        key = "node.{0}.{1}.material".format(self.sceneName,
+                                             CRANE_CONTROLS_SIGNAL)
+        st.set(key, mat)
+        self.scene.setState(st)
 
 def SCRIPT_CREATE(sceneName, nodeName, scene, action, dependencies):
     return CraneControls(sceneName, nodeName, scene, action, dependencies)
