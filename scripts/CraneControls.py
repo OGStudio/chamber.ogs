@@ -1,120 +1,33 @@
 
 import pymjin2
 
-class CraneControlsImpl(object):
-    def __init__(self, scene, action):
-        # Refer.
-        self.scene  = scene
-        self.action = action
-        # Setup.
-        self.moveButtonUp   = "moveBy.default.moveButtonUp"
-        self.moveButtonDown = "moveBy.default.moveButtonDown"
-        self.pressButtonSeq = "sequence.default.pressButton"
-        # State.
-        self.buttons = []
-        self.canPressButton = True
-    def __del__(self):
-        # Derefer.
-        self.scene  = None
-        self.action = None
-    def onActionState(self, sceneName, actionName, state):
-        print "impl.onActionState", actionName, state
-        if (not state):
-            if (actionName == self.pressButtonSeq):
-                self.canPressButton = True
-            elif (actionName == self.moveButtonDown):
-                print "execute button action"
-    def onSelection(self, sceneName, nodeName):
-        if (nodeName in self.buttons):
-            self.pressButton(sceneName, nodeName)
-    def pressButton(self, sceneName, nodeName):
-        if (not self.canPressButton):
-            return
-        self.canPressButton = False
-        node = sceneName + "." + nodeName
-        print "pressButton", node
-        st = pymjin2.State()
-        key = "{0}.node".format(self.moveButtonUp)
-        st.set(key, node)
-        key = "{0}.node".format(self.moveButtonDown)
-        st.set(key, node)
-        key = "{0}.active".format(self.pressButtonSeq)
-        st.set(key, "1")
-        self.action.setState(st)
-    def setupButtons(self, sceneName, nodeName):
-        key = "node.{0}.{1}.children".format(sceneName, nodeName)
-        st = self.scene.state([key])
-        for k in st.keys:
-            children = st.value(k)
-            for c in children:
-                if (c.endswith("Up")   or
-                    c.endswith("Down") or
-                    c.endswith("Left") or
-                    c.endswith("Right")):
-                    self.buttons.append(c)
-
-class CraneControlsListenerAction(pymjin2.ComponentListener):
-    def __init__(self, impl, sceneName):
-        pymjin2.ComponentListener.__init__(self)
-        # Refer.
-        self.impl = impl
-        self.sceneName = sceneName
-    def __del__(self):
-        # Derefer.
-        self.impl = None
-    def onComponentStateChange(self, st):
-        for k in st.keys:
-            actionName = k.replace(".active", "")
-            state = (st.value(k)[0] == "1")
-            self.impl.onActionState(self.sceneName, actionName, state)
-
-class CraneControlsListenerScene(pymjin2.ComponentListener):
-    def __init__(self, impl):
-        pymjin2.ComponentListener.__init__(self)
-        # Refer.
-        self.impl = impl
-    def __del__(self):
-        # Derefer.
-        self.impl = None
-    def onComponentStateChange(self, st):
-        for k in st.keys:
-            v = k.split(".")
-            sceneName = v[1]
-            nodeName = st.value(k)[0]
-            self.impl.onSelection(sceneName, nodeName)
+CRANE_CONTROLS_DEPENDENCY_CONTROL_BUTTONS = "scripts/ControlButtons.py"
 
 class CraneControls:
-    def __init__(self, sceneName, nodeName, scene, action):
+    def __init__(self, sceneName, nodeName, scene, action, dependencies):
         # Refer.
-        self.sceneName = sceneName
-        self.nodeName  = nodeName
-        self.scene     = scene
-        self.action    = action
+        self.sceneName    = sceneName
+        self.scene        = scene
+        self.action       = action
+        self.dependencies = dependencies
         # Create.
-        self.impl           = CraneControlsImpl(scene, action)
-        self.listenerAction = CraneControlsListenerAction(self.impl, sceneName)
-        self.listenerScene  = CraneControlsListenerScene(self.impl)
+        module = self.dependencies[CRANE_CONTROLS_DEPENDENCY_CONTROL_BUTTONS]
+        self.controlButtons = module.ControlButtons(sceneName, nodeName, scene, action)
         # Prepare.
-        self.impl.setupButtons(sceneName, nodeName)
-        keys = ["{0}.active".format(self.impl.pressButtonSeq),
-                "{0}.active".format(self.impl.moveButtonDown)]
-        self.action.addListener(keys, self.listenerAction)
-        key = "selector.{0}.selectedNode".format(sceneName)
-        self.scene.addListener([key], self.listenerScene)
     def __del__(self):
         # Tear down.
-        self.action.removeListener(self.listenerAction)
-        self.scene.removeListener(self.listenerScene)
         # Destroy.
-        del self.listenerAction
-        del self.listenerScene
-        del self.impl
+        del self.controlButtons
         # Derefer.
-        self.scene  = None
-        self.action = None
+        self.scene        = None
+        self.action       = None
+        self.dependencies = None
 
-def SCRIPT_CREATE(sceneName, nodeName, scene, action):
-    return CraneControls(sceneName, nodeName, scene, action)
+def SCRIPT_CREATE(sceneName, nodeName, scene, action, dependencies):
+    return CraneControls(sceneName, nodeName, scene, action, dependencies)
+
+def SCRIPT_DEPENDENCIES():
+    return [CRANE_CONTROLS_DEPENDENCY_CONTROL_BUTTONS]
 
 def SCRIPT_DESTROY(instance):
     del instance
