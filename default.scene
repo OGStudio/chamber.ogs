@@ -261,7 +261,7 @@ node
             model = models/processor.osgt
         crane_base
             parent = ROOT
-            position = 0.000000 0.000010 8.100000
+            position = 0.000000 0.000016 8.100000
             material = crane_base_off
             model = models/crane_base.osgt
         crane_arms_base
@@ -376,7 +376,7 @@ node
             model = models/controlArrow.osgt
         craneControlUp
             parent = craneControl
-            position = 0.000000 0.000000 0.199999
+            position = 0.000000 0.000000 0.200001
             rotation = 0.000000 0.000000 180.000000
             material = control_arrow
             model = models/controlArrow.osgt
@@ -401,12 +401,13 @@ node
             position = -2.000000 0.000000 0.400000
             material = control
             model = models/control.osgt
-        pistonControlLower
+            script = scripts/CraneControlsLift.py
+        pistonControlDown
             parent = pistonControl
             position = 0.000000 0.000000 0.199998
             material = control_arrow
             model = models/controlArrow.osgt
-        pistonCotrolLift
+        pistonControlUp
             parent = pistonControl
             position = 0.000000 0.000000 0.200000
             rotation = 0.000000 0.000000 180.000000

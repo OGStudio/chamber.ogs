@@ -77,6 +77,9 @@ class ControlButtonsListenerAction(pymjin2.ComponentListener):
         self.impl = None
     def onComponentStateChange(self, st):
         for k in st.keys:
+            # Ignore other instances.
+            if (not self.impl.pressedNodeName):
+                return
             actionName = k.replace(".active", "")
             state = (st.value(k)[0] == "1")
             self.impl.onActionState(self.sceneName, actionName, state)
