@@ -4,6 +4,12 @@ delay
             delay = 5000
 moveBy
     default
+        liftCranePiston
+            point = 0 0 0 0
+            point = 3000 0 0 2.7
+        lowerCranePiston
+            point = 0 0 0 0
+            point = 3000 0 0 -2.7
         moveCraneUp
             point = 0 0 0 0
             point = 8000 0 -8 0

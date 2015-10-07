@@ -276,6 +276,7 @@ node
             model = models/crane_arms_piston_base.osgt
         crane_arms_piston
             parent = crane_arms_piston_base
+            position = 0.000000 0.000000 -0.200000
             material = crane_arms_piston
             model = models/crane_arms_piston.osgt
         rail_base_left
