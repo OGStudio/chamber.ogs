@@ -213,7 +213,7 @@ node
             model = models/lineSegmentLight.osgt
         controlLine
             parent = ROOT
-            position = 2.000000 13.000000 0.000000
+            position = 3.000000 13.000000 0.000000
             material = control
             model = models/control.osgt
             script = scripts/LineControls.py
@@ -261,12 +261,12 @@ node
             model = models/processor.osgt
         crane_base
             parent = ROOT
-            position = 0.000000 0.000000 8.100000
+            position = 0.000000 0.000010 8.100000
             material = crane_base_off
             model = models/crane_base.osgt
         crane_arms_base
             parent = crane_base
-            position = 0.000000 0.000000 -0.200000
+            position = -0.000001 0.000000 -0.200000
             material = crane_arms_base
             model = models/crane_arms_base.osgt
         crane_arms_piston_base
@@ -358,9 +358,14 @@ node
             position = 0.000000 -6.000000 0.000000
             material = rail
             model = models/rail.osgt
-        craneControl
+        controlPlate
             parent = ROOT
-            position = -2.000000 13.000000 0.000000
+            position = -4.000000 13.000000 0.000000
+            material = control_signal_off
+            model = models/crane_base.osgt
+        craneControl
+            parent = controlPlate
+            position = 2.000000 0.000000 0.400000
             material = control
             model = models/control.osgt
             script = scripts/CraneControls.py
@@ -377,7 +382,7 @@ node
             model = models/controlArrow.osgt
         craneControlRight
             parent = craneControl
-            position = 0.000000 0.000000 0.199996
+            position = 0.000000 0.000000 0.199995
             rotation = 0.000000 0.000000 90.000000
             material = control_arrow
             model = models/controlArrow.osgt
@@ -389,5 +394,25 @@ node
             model = models/controlArrow.osgt
         craneControlSignal
             parent = craneControl
+            material = control_signal_off
+            model = models/controlSignal.osgt
+        pistonControl
+            parent = controlPlate
+            position = -2.000000 0.000000 0.400000
+            material = control
+            model = models/control.osgt
+        pistonControlLower
+            parent = pistonControl
+            position = 0.000000 0.000000 0.199998
+            material = control_arrow
+            model = models/controlArrow.osgt
+        pistonCotrolLift
+            parent = pistonControl
+            position = 0.000000 0.000000 0.200000
+            rotation = 0.000000 0.000000 180.000000
+            material = control_arrow
+            model = models/controlArrow.osgt
+        pistonControlSignal
+            parent = pistonControl
             material = control_signal_off
             model = models/controlSignal.osgt
