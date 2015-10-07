@@ -48,7 +48,7 @@ class CraneControls:
             self.crane.moveRight(False)
         elif (nodeName.endswith(self.buttonPostfixRight)):
             self.crane.moveRight(True)
-    def onCraneMoveUp(self, up, state):
+    def onCraneMove(self, state):
         self.setSignalState(state)
     def setSignalState(self, state):
         mat = CRANE_CONTROLS_SIGNAL_MATERIAL_OFF
