@@ -178,7 +178,7 @@ class LineControls:
         self.scene  = None
         self.action = None
 
-def SCRIPT_CREATE(sceneName, nodeName, scene, action, dependencies):
+def SCRIPT_CREATE(sceneName, nodeName, scene, action, scriptEnvironment, dependencies):
     return LineControls(sceneName, nodeName, scene, action)
 
 def SCRIPT_DEPENDENCIES():

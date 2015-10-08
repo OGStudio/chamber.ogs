@@ -418,3 +418,36 @@ node
             parent = pistonControl
             material = control_signal_off
             model = models/controlSignal.osgt
+        seControl
+            parent = ROOT
+            position = 10.000000 13.000000 0.000000
+            material = control
+            model = models/control.osgt
+        seControlDown
+            parent = seControl
+            position = 0.000000 0.000000 0.199998
+            material = control_arrow
+            model = models/controlArrow.osgt
+        seControlUp
+            parent = seControl
+            position = 0.000000 0.000000 0.199999
+            rotation = 0.000000 0.000000 180.000000
+            material = control_arrow
+            model = models/controlArrow.osgt
+        seControlRight
+            parent = seControl
+            position = 0.000000 0.000000 0.199996
+            rotation = 0.000000 0.000000 90.000000
+            material = control_arrow
+            model = models/controlArrow.osgt
+            script = scripts/Button.py
+        seControlLeft
+            parent = seControl
+            position = 0.000000 0.000000 0.199998
+            rotation = 0.000000 0.000000 270.000000
+            material = control_arrow
+            model = models/controlArrow.osgt
+        seControlSignal
+            parent = seControl
+            material = control_signal_off
+            model = models/controlSignal.osgt

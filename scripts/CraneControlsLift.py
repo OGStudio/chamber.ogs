@@ -53,7 +53,7 @@ class CraneControlsLift:
         st.set(key, mat)
         self.scene.setState(st)
 
-def SCRIPT_CREATE(sceneName, nodeName, scene, action, dependencies):
+def SCRIPT_CREATE(sceneName, nodeName, scene, action, scriptEnvironment, dependencies):
     return CraneControlsLift(sceneName, nodeName, scene, action, dependencies)
 
 def SCRIPT_DEPENDENCIES():
