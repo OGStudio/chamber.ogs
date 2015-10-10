@@ -9,6 +9,7 @@ node
             parent = ROOT
             material = floor
             model = models/floor.osgt
+            script = scripts/Main2.py
         line2
             parent = ROOT
         lineSegment1
@@ -440,7 +441,6 @@ node
             rotation = 0.000000 0.000000 90.000000
             material = control_arrow
             model = models/controlArrow.osgt
-            script = scripts/Button.py
         seControlLeft
             parent = seControl
             position = 0.000000 0.000000 0.199998
