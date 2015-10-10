@@ -1,11 +1,8 @@
 
 import pymjin2
 
-#CRANE_CONTROLS_DEPENDENCY_CONTROL_BUTTONS = "scripts/ControlButtons.py"
-#CRANE_CONTROLS_DEPENDENCY_CRANE_LIFT      = "scripts/CraneLift.py"
-#CRANE_PISTON_SIGNAL                       = "pistonControlSignal"
-#CRANE_CONTROLS_SIGNAL_MATERIAL_ON         = "control_signal_on"
-#CRANE_CONTROLS_SIGNAL_MATERIAL_OFF        = "control_signal_off"
+#BUTTON_ACTION_PRESS = "moveBy.default.pressButton"
+BUTTON_ACTION_PRESS = "moveBy.default.moveButtonDown"
 
 class ButtonImpl(object):
     def __init__(self, scene, action):#, listeners):
@@ -13,14 +10,31 @@ class ButtonImpl(object):
         self.scene     = scene
         self.action    = action
         #self.listeners = listeners
-        # State.
+        # Create.
+        self.selectable = {}
     def __del__(self):
         # Derefer.
         self.scene     = None
         self.action    = None
         #self.listeners = None
     def onSelection(self, sceneName, nodeName):
-        print "onSelection", sceneName, nodeName
+        if ((sceneName not in self.selectable) or
+            (nodeName not in self.selectable[sceneName])):
+            return
+        node = "{0}.{1}".format(sceneName, nodeName)
+        st = pymjin2.State()
+        st.set("{0}.node".format(BUTTON_ACTION_PRESS), node)
+        st.set("{0}.active".format(BUTTON_ACTION_PRESS), "1")
+        self.action.setState(st)
+    def setSelectable(self, sceneName, nodeName, state):
+        # Make sure scene exists.
+        if (sceneName not in self.selectable):
+            self.selectable[sceneName] = {}
+        if (state):
+            self.selectable[sceneName][nodeName] = True
+        # Remove disabled.
+        elif (nodeName in self.selectable[sceneName]):
+            del self.selectable[sceneName][nodeName]
 
 class ButtonListenerSelection(pymjin2.ComponentListener):
     def __init__(self, impl):
@@ -32,22 +46,22 @@ class ButtonListenerSelection(pymjin2.ComponentListener):
         self.impl = None
     def onComponentStateChange(self, st):
         for k in st.keys:
-            print k, st.value(k)
-#            nodeName = st.value(k)[0]
-#            # Ignore other nodes.
-#            if (nodeName != self.nodeName):
-#                continue
-#            v = k.split(".")
-#            sceneName = v[1]
-#            # Ignore other scenes.
-#            if (sceneName != self.sceneName):
-#                continue
-#            self.impl.onSelection(sceneName, nodeName)
+            v = k.split(".")
+            sceneName = v[1]
+            nodeName = st.value(k)[0]
+            # Ignore deselection.
+            if (not len(nodeName)):
+                continue
+            self.impl.onSelection(sceneName, nodeName)
 
 class ButtonExtensionScriptEnvironment(pymjin2.Extension):
-    def __init__(self):
+    def __init__(self, impl):
         pymjin2.Extension.__init__(self)
+        # Refer.
+        self.impl = impl
     def deinit(self):
+        # Derefer.
+        self.impl = None
         print "ButtonExt.deinit"
     def description(self):
         return "Turn any node into a simple button"
@@ -57,7 +71,10 @@ class ButtonExtensionScriptEnvironment(pymjin2.Extension):
     def name(self):
         return "ButtonExtensionScriptEnvironment"
     def set(self, key, value):
-        print "ButtonExt.set", key, value
+        v = key.split(".")
+        sceneName = v[1]
+        nodeName  = v[2]
+        self.impl.setSelectable(sceneName, nodeName, value == "1")
 
 class Button:
     def __init__(self, scene, action, scriptEnvironment):
@@ -68,7 +85,7 @@ class Button:
         # Create.
         self.impl              = ButtonImpl(scene, action)
         self.listenerSelection = ButtonListenerSelection(self.impl)
-        self.extension         = ButtonExtensionScriptEnvironment()
+        self.extension         = ButtonExtensionScriptEnvironment(self.impl)
         # Prepare.
         key = "selector..selectedNode"
         self.scene.addListener([key], self.listenerSelection)
@@ -80,8 +97,8 @@ class Button:
         self.senv.removeExtension(self.extension)
         # Destroy.
         del self.listenerSelection
-        del self.impl
         del self.extension
+        del self.impl
         # Derefer.
         self.scene  = None
         self.action = None

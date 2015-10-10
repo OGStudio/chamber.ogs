@@ -21,6 +21,13 @@ class Main2:
         module = self.dependencies[MAIN2_DEPENDENCY_BUTTON]
         self.button = module.Button(scene, action, scriptEnvironment)
         # Prepare.
+        # Mark buttons selectable.
+        buttons = ["seControlRight", "seControlLeft", "seControlUp", "seControlDown"]
+        st = pymjin2.State()
+        for b in buttons:
+            key = "button.{0}.{1}.selectable".format(sceneName, b)
+            st.set(key, "1")
+        self.senv.setState(st)
         print "{0} Main2.__init__({1}, {2})".format(id(self), sceneName, nodeName)
     def __del__(self):
         # Derefer.
