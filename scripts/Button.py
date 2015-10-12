@@ -2,7 +2,9 @@
 import pymjin2
 
 #BUTTON_ACTION_PRESS = "moveBy.default.pressButton"
-BUTTON_ACTION_PRESS = "moveBy.default.moveButtonDown"
+BUTTON_ACTION_PRESS_TYPE  = "moveBy"
+BUTTON_ACTION_PRESS_GROUP = "default"
+BUTTON_ACTION_PRESS_NAME  = "moveButtonDown"
 
 class ButtonImpl(object):
     def __init__(self, scene, action):#, listeners):
@@ -21,22 +23,26 @@ class ButtonImpl(object):
         if ((sceneName not in self.selectable) or
             (nodeName not in self.selectable[sceneName])):
             return
+        actionName = self.selectable[sceneName][nodeName]
         node = "{0}.{1}".format(sceneName, nodeName)
         st = pymjin2.State()
-        st.set("{0}.node".format(BUTTON_ACTION_PRESS), node)
-        st.set("{0}.active".format(BUTTON_ACTION_PRESS), "1")
+        st.set("{0}.node".format(actionName), node)
+        st.set("{0}.active".format(actionName), "1")
         self.action.setState(st)
     def setSelectable(self, sceneName, nodeName, state):
         # Make sure scene exists.
         if (sceneName not in self.selectable):
             self.selectable[sceneName] = {}
         if (state):
-            print "clone action", BUTTON_ACTION_PRESS
-            key = "{0}.clone".format(BUTTON_ACTION_PRESS)
+            key = "{0}.{1}.{2}.clone".format(BUTTON_ACTION_PRESS_TYPE,
+                                             BUTTON_ACTION_PRESS_GROUP,
+                                             BUTTON_ACTION_PRESS_NAME)
             st = self.action.state([key])
             newGroupName = st.value(key)[0]
-            print "finished cloning action", BUTTON_ACTION_PRESS, "into group", newGroupName
-            self.selectable[sceneName][nodeName] = True
+            newActionName = "{0}.{1}.{2}".format(BUTTON_ACTION_PRESS_TYPE,
+                                                 newGroupName,
+                                                 BUTTON_ACTION_PRESS_NAME)
+            self.selectable[sceneName][nodeName] = newActionName
         # Remove disabled.
         elif (nodeName in self.selectable[sceneName]):
             del self.selectable[sceneName][nodeName]
