@@ -31,6 +31,11 @@ class ButtonImpl(object):
         if (sceneName not in self.selectable):
             self.selectable[sceneName] = {}
         if (state):
+            print "clone action", BUTTON_ACTION_PRESS
+            key = "{0}.clone".format(BUTTON_ACTION_PRESS)
+            st = self.action.state([key])
+            newGroupName = st.value(key)[0]
+            print "finished cloning action", BUTTON_ACTION_PRESS, "into group", newGroupName
             self.selectable[sceneName][nodeName] = True
         # Remove disabled.
         elif (nodeName in self.selectable[sceneName]):
