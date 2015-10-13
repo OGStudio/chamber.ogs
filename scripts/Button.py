@@ -2,9 +2,9 @@
 import pymjin2
 
 #BUTTON_ACTION_PRESS = "moveBy.default.pressButton"
-BUTTON_ACTION_PRESS_TYPE  = "moveBy"
-BUTTON_ACTION_PRESS_GROUP = "default"
-BUTTON_ACTION_PRESS_NAME  = "moveButtonDown"
+BUTTON_ACTION_DOWN_TYPE  = "moveBy"
+BUTTON_ACTION_DOWN_GROUP = "default"
+BUTTON_ACTION_DOWN_NAME  = "moveButtonDown"
 
 class ButtonImpl(object):
     def __init__(self, scene, action, senv):
@@ -50,14 +50,14 @@ class ButtonImpl(object):
         if (sceneName not in self.selectable):
             self.selectable[sceneName] = {}
         if (state):
-            key = "{0}.{1}.{2}.clone".format(BUTTON_ACTION_PRESS_TYPE,
-                                             BUTTON_ACTION_PRESS_GROUP,
-                                             BUTTON_ACTION_PRESS_NAME)
+            key = "{0}.{1}.{2}.clone".format(BUTTON_ACTION_DOWN_TYPE,
+                                             BUTTON_ACTION_DOWN_GROUP,
+                                             BUTTON_ACTION_DOWN_NAME)
             st = self.action.state([key])
             newGroupName = st.value(key)[0]
-            newActionName = "{0}.{1}.{2}".format(BUTTON_ACTION_PRESS_TYPE,
+            newActionName = "{0}.{1}.{2}".format(BUTTON_ACTION_DOWN_TYPE,
                                                  newGroupName,
-                                                 BUTTON_ACTION_PRESS_NAME)
+                                                 BUTTON_ACTION_DOWN_NAME)
             self.selectable[sceneName][nodeName] = newActionName
             self.actions[newActionName] = "{0}.{1}".format(sceneName, nodeName)
         # Remove disabled.
@@ -134,8 +134,8 @@ class Button:
         # Prepare.
         key = "selector..selectedNode"
         self.scene.addListener([key], self.listenerSelection)
-        key = "{0}..{1}.active".format(BUTTON_ACTION_PRESS_TYPE,
-                                       BUTTON_ACTION_PRESS_NAME)
+        key = "{0}..{1}.active".format(BUTTON_ACTION_DOWN_TYPE,
+                                       BUTTON_ACTION_DOWN_NAME)
         self.action.addListener([key], self.listenerAction)
         self.senv.addExtension(self.extension)
         print "{0} Button.__init__".format(id(self))
