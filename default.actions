@@ -47,5 +47,5 @@ moveBy
 sequence
     default
         pressButton
-            action = moveBy.moveButtonDown
-            action = moveBy.moveButtonUp
+            action = moveButtonDown
+            action = moveButtonUp
