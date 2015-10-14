@@ -2,6 +2,13 @@
 import pymjin2
 
 MAIN2_DEPENDENCY_BUTTON = "scripts/Button.py"
+MAIN2_DEPENDENCY_CRANE  = "scripts/Crane2.py"
+
+MAIN2_BUTTON_CRANE_STEP_V_DEC = "seControlDown"
+MAIN2_BUTTON_CRANE_STEP_V_INC = "seControlUp"
+MAIN2_BUTTON_CRANE_STEP_H_DEC = "seControlLeft"
+MAIN2_BUTTON_CRANE_STEP_H_INC = "seControlRight"
+MAIN2_CRANE                   = "crane_base"
 
 class Main2ListenerScriptEnvironment(pymjin2.ComponentListener):
     def __init__(self, impl):
@@ -33,13 +40,21 @@ class Main2:
         module = self.dependencies[MAIN2_DEPENDENCY_BUTTON]
         self.button = module.Button(scene, action, scriptEnvironment)
         self.listenerSEnv = Main2ListenerScriptEnvironment(None)
+        module = self.dependencies[MAIN2_DEPENDENCY_CRANE]
+        self.crane = module.Crane2(scene, action, scriptEnvironment)
         # Prepare.
-        # Mark buttons selectable.
-        buttons = ["seControlRight", "seControlLeft", "seControlUp", "seControlDown"]
+        # Mark crane buttons selectable.
+        buttons = [MAIN2_BUTTON_CRANE_STEP_V_DEC,
+                   MAIN2_BUTTON_CRANE_STEP_V_INC,
+                   MAIN2_BUTTON_CRANE_STEP_H_DEC,
+                   MAIN2_BUTTON_CRANE_STEP_H_INC]
         st = pymjin2.State()
         for b in buttons:
             key = "button.{0}.{1}.selectable".format(sceneName, b)
             st.set(key, "1")
+        # Enable crane.
+        key = "crane.{0}.{1}.enabled".format(sceneName, MAIN2_CRANE)
+        st.set(key, "1")
         self.senv.setState(st)
         # Listen to button selection.
         self.senv.addListener(["button...selected"], self.listenerSEnv)
@@ -54,6 +69,7 @@ class Main2:
         self.dependencies = None
         # Destroy
         del self.button
+        del self.crane
         del self.listenerSEnv
         print "{0} Main2.__del__".format(id(self))
 
@@ -71,7 +87,8 @@ def SCRIPT_CREATE(sceneName,
                  dependencies)
 
 def SCRIPT_DEPENDENCIES():
-    return [MAIN2_DEPENDENCY_BUTTON]
+    return [MAIN2_DEPENDENCY_BUTTON,
+            MAIN2_DEPENDENCY_CRANE]
 
 def SCRIPT_DESTROY(instance):
     del instance
