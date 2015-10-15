@@ -52,8 +52,8 @@ class Crane2Impl(object):
 #            actionDownName = self.selectable[sceneName][nodeName]["down"]
 #            del self.actions[actionDownName]
 #            del self.selectable[sceneName][nodeName]
-    def setStepV(self, sceneName, nodeName, value):
-        print "Crane2Impl.setStepV", nodeName, value
+    def setStepDV(self, sceneName, nodeName, value):
+        print "Crane2Impl.setStepDV", nodeName, value
 
 class Crane2ListenerAction(pymjin2.ComponentListener):
     def __init__(self, impl):
@@ -81,12 +81,14 @@ class Crane2ExtensionScriptEnvironment(pymjin2.Extension):
         print "Crane2Ext.deinit"
     def description(self):
         return "Turn any node into a simple Crane2"
+    def get(self, st, key):
+        print "Crane2.get({0})".format(key)
     def keys(self):
         return ["crane...enabled",
                 "crane...moving",
-                "crane...stepH",
-                "crane...stepV",
-                "crane...stepD"]
+                "crane...stepdh",
+                "crane...stepdv",
+                "crane...stepdd"]
     def name(self):
         return "Crane2ExtensionScriptEnvironment"
     def set(self, key, value):
@@ -97,8 +99,8 @@ class Crane2ExtensionScriptEnvironment(pymjin2.Extension):
         property  = v[3]
         if (property == "enabled"):
             self.impl.setEnabled(sceneName, nodeName, value == "1")
-        elif (property == "stepV"):
-            self.impl.setStepV(sceneName, nodeName, int(value))
+        elif (property == "stepdv"):
+            self.impl.setStepDV(sceneName, nodeName, int(value))
 
 class Crane2:
     def __init__(self, scene, action, scriptEnvironment):

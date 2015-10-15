@@ -1,33 +1,68 @@
 
 import pymjin2
 
-#Control_ARMS_BASE_POSTFIX = "_arms_base"
-#
-#Control_MOVE_DOWN         = "moveBy.default.moveCraneDown"
-#Control_MOVE_LEFT         = "moveBy.default.moveBeltLeft"
-#Control_MOVE_RIGHT        = "moveBy.default.moveBeltRight"
-#Control_MOVE_UP           = "moveBy.default.moveCraneUp"
-#
-#Control_DEFAULT_STEP_V    = 1
-#Control_STEPS_H           = 3
-#Control_STEPS_V           = 3
+CONTROL_BUTTON_POSTFIX_DOWN  = "Down"
+CONTROL_BUTTON_POSTFIX_LEFT  = "Left"
+CONTROL_BUTTON_POSTFIX_RIGHT = "Right"
+CONTROL_BUTTON_POSTFIX_UP    = "Up"
+CONTROL_CRANE_NAME           = "crane_base"
 
 class ControlImpl(object):
-    def __init__(self, scene, action, senv):
+    def __init__(self, sceneName, scene, senv):
         # Refer.
-        self.scene  = scene
-        self.action = action
-        self.senv   = senv
+        self.scene     = scene
+        self.senv      = senv
+        self.sceneName = sceneName
         # Create.
+        self.buttons = { "down" : None,
+                         "left" : None,
+                        "right" : None,
+                           "up" : None }
     def __del__(self):
         # Derefer.
-        self.scene  = None
-        self.action = None
-        self.senv   = None
-    def onActionState(self, actionName, state):
-        pass
+        self.scene = None
+        self.senv  = None
+    def enableButtons(self):
+        st = pymjin2.State()
+        for type, value in self.buttons.items():
+            key = "button..{0}.selectable".format(value)
+            st.set(key, "1")
+        self.senv.setState(st)
+    def onButtonPress(self, nodeName):
+        print "onButtonPress", nodeName
+        craneStepVDiff = 0
+        if (nodeName == self.buttons["down"]):
+            craneStepVDiff = 1
+        elif (nodeName == self.buttons["up"]):
+            craneStepVDiff = -1
+#        elif (nodeName == self.buttons["left"]):
+#            print "left"
+#        elif (nodeName == self.buttons["right"]):
+#            print "right"
+        if (craneStepVDiff):
+            print "crane step V diff:", craneStepVDiff
+            st = pymjin2.State()
+            key = "crane.{0}.{1}.stepdv".format(self.sceneName, CONTROL_CRANE_NAME)
+            st.set(key, str(craneStepVDiff))
+            self.senv.setState(st)
+    def resolveButtons(self, sceneName, nodeName):
+        key = "node.{0}.{1}.children".format(sceneName, nodeName)
+        st = self.scene.state([key])
+        if (not len(st.keys)):
+            print "Could not resolve buttons"
+            return
+        children = st.value(key)
+        for c in children:
+            if (c.endswith(CONTROL_BUTTON_POSTFIX_DOWN)):
+                self.buttons["down"] = c
+            elif (c.endswith(CONTROL_BUTTON_POSTFIX_LEFT)):
+                self.buttons["left"] = c
+            elif (c.endswith(CONTROL_BUTTON_POSTFIX_RIGHT)):
+                self.buttons["right"] = c
+            elif (c.endswith(CONTROL_BUTTON_POSTFIX_UP)):
+                self.buttons["up"] = c
 
-class ControlListenerAction(pymjin2.ComponentListener):
+class ControlListenerScriptEnvironment(pymjin2.ComponentListener):
     def __init__(self, impl):
         pymjin2.ComponentListener.__init__(self)
         # Refer.
@@ -37,72 +72,62 @@ class ControlListenerAction(pymjin2.ComponentListener):
         self.impl = None
     def onComponentStateChange(self, st):
         for k in st.keys:
-            print k, st.value(k)
-#            actionName = k.replace(".active", "")
-#            state = (st.value(k)[0] == "1")
-#            self.impl.onActionState(actionName, state)
-
-class ControlExtensionScriptEnvironment(pymjin2.Extension):
-    def __init__(self, impl):
-        pymjin2.Extension.__init__(self)
-        # Refer.
-        self.impl = impl
-    def deinit(self):
-        # Derefer.
-        self.impl = None
-        print "ControlExt.deinit"
-    def description(self):
-        return "Turn any node into a simple Control"
-    def keys(self):
-        return ["control...enabled",
-                "crane...moving",
-                "crane...stepH",
-                "crane...stepV",
-                "crane...stepD"]
-    def name(self):
-        return "ControlExtensionScriptEnvironment"
-    def set(self, key, value):
-        print "Control.set({0}, {1})".format(key, value)
-        v = key.split(".")
-        sceneName = v[1]
-        nodeName  = v[2]
-        property  = v[3]
-        if (property == "enabled"):
-            self.impl.setEnabled(sceneName, nodeName, value == "1")
-        elif (property == "stepV"):
-            self.impl.setStepV(sceneName, nodeName, int(value))
+            v = k.split(".")
+            #type     = v[0]
+            nodeName = v[2]
+            #property = v[3]
+            value    = st.value(k)[0]
+            if (value == "1"):
+                self.impl.onButtonPress(nodeName)
 
 class Control:
-    def __init__(self, scene, action, scriptEnvironment):
+    def __init__(self,
+                 sceneName,
+                 nodeName,
+                 scene,
+                 action,
+                 scriptEnvironment,
+                 dependencies):
         # Refer.
-        self.scene  = scene
-        self.action = action
-        self.senv   = scriptEnvironment
+        self.senv = scriptEnvironment
         # Create.
-        self.impl              = ControlImpl(scene, action, scriptEnvironment)
-        self.listenerAction    = ControlListenerAction(self.impl)
-        self.extension         = ControlExtensionScriptEnvironment(self.impl)
+        self.impl         = ControlImpl(sceneName, scene, scriptEnvironment)
+        self.listenerSEnv = ControlListenerScriptEnvironment(self.impl)
         # Prepare.
-#        key = "selector..selectedNode"
-#        self.scene.addListener([key], self.listenerSelection)
-        # Listen to Control down state.
-#        key = "{0}..{1}.active".format(Control_ACTION_DOWN_TYPE,
-#                                       Control_ACTION_DOWN_NAME)
-#        self.action.addListener([key], self.listenerAction)
-        self.senv.addExtension(self.extension)
+        self.impl.resolveButtons(sceneName, nodeName)
+        self.impl.enableButtons()
+        # Listen to buttons' down state.
+        keys = []
+        for type, value in self.impl.buttons.items():
+            key = "button..{0}.selected".format(value)
+            keys.append(key)
+        self.senv.addListener(keys, self.listenerSEnv)
         print "{0} Control.__init__".format(id(self))
     def __del__(self):
         # Tear down.
-        self.action.removeListener(self.listenerAction)
-        #self.scene.removeListener(self.listenerSelection)
-        self.senv.removeExtension(self.extension)
+        self.senv.removeListener(self.listenerSEnv)
         # Destroy.
-        del self.listenerAction
-        del self.extension
+        del self.listenerSEnv
         del self.impl
         # Derefer.
-        self.scene  = None
-        self.action = None
-        self.senv   = None
+        self.senv = None
         print "{0} Control.__del__".format(id(self))
 
+def SCRIPT_CREATE(sceneName,
+                  nodeName,
+                  scene,
+                  action,
+                  scriptEnvironment,
+                  dependencies):
+    return Control(sceneName,
+                   nodeName,
+                   scene,
+                   action,
+                   scriptEnvironment,
+                   dependencies)
+
+def SCRIPT_DEPENDENCIES():
+    return []
+
+def SCRIPT_DESTROY(instance):
+    del instance

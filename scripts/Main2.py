@@ -20,7 +20,7 @@ class Main2ListenerScriptEnvironment(pymjin2.ComponentListener):
         self.impl = None
     def onComponentStateChange(self, st):
         for k in st.keys:
-            print k, st.value(k)
+            print "Main2", k, st.value(k)
 
 class Main2:
     def __init__(self,
@@ -57,7 +57,7 @@ class Main2:
         st.set(key, "1")
         self.senv.setState(st)
         # Listen to button selection.
-        self.senv.addListener(["button...selected"], self.listenerSEnv)
+        #self.senv.addListener(["button...selected"], self.listenerSEnv)
         print "{0} Main2.__init__({1}, {2})".format(id(self), sceneName, nodeName)
     def __del__(self):
         # Tear down.

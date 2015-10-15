@@ -424,6 +424,7 @@ node
             position = 10.000000 13.000000 0.000000
             material = control
             model = models/control.osgt
+            script = scripts/Control.py
         seControlDown
             parent = seControl
             position = 0.000000 0.000000 0.199998
