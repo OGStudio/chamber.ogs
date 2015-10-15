@@ -5,7 +5,12 @@ CONTROL_BUTTON_POSTFIX_DOWN  = "Down"
 CONTROL_BUTTON_POSTFIX_LEFT  = "Left"
 CONTROL_BUTTON_POSTFIX_RIGHT = "Right"
 CONTROL_BUTTON_POSTFIX_UP    = "Up"
+
 CONTROL_CRANE_NAME           = "crane_base"
+
+CONTROL_SIGNAL_MATERIAL_OFF  = "control_signal_off"
+CONTROL_SIGNAL_MATERIAL_ON   = "control_signal_on"
+CONTROL_SIGNAL_POSTFIX       = "Signal"
 
 class ControlImpl(object):
     def __init__(self, sceneName, scene, senv):
@@ -18,6 +23,7 @@ class ControlImpl(object):
                          "left" : None,
                         "right" : None,
                            "up" : None }
+        self.signal = None
     def __del__(self):
         # Derefer.
         self.scene = None
@@ -45,6 +51,15 @@ class ControlImpl(object):
             key = "crane.{0}.{1}.stepdv".format(self.sceneName, CONTROL_CRANE_NAME)
             st.set(key, str(craneStepVDiff))
             self.senv.setState(st)
+    def onCraneMotion(self, sceneName, state):
+        print "onCraneMotion", state
+        mat = CONTROL_SIGNAL_MATERIAL_OFF
+        if (state):
+            mat = CONTROL_SIGNAL_MATERIAL_ON
+        key = "node.{0}.{1}.material".format(sceneName, self.signal)
+        st = pymjin2.State()
+        st.set(key, mat)
+        self.scene.setState(st)
     def resolveButtons(self, sceneName, nodeName):
         key = "node.{0}.{1}.children".format(sceneName, nodeName)
         st = self.scene.state([key])
@@ -61,6 +76,8 @@ class ControlImpl(object):
                 self.buttons["right"] = c
             elif (c.endswith(CONTROL_BUTTON_POSTFIX_UP)):
                 self.buttons["up"] = c
+            elif (c.endswith(CONTROL_SIGNAL_POSTFIX)):
+                self.signal = c
 
 class ControlListenerScriptEnvironment(pymjin2.ComponentListener):
     def __init__(self, impl):
@@ -73,12 +90,16 @@ class ControlListenerScriptEnvironment(pymjin2.ComponentListener):
     def onComponentStateChange(self, st):
         for k in st.keys:
             v = k.split(".")
-            #type     = v[0]
-            nodeName = v[2]
+            type      = v[0]
+            sceneName = v[1]
+            nodeName  = v[2]
             #property = v[3]
-            value    = st.value(k)[0]
-            if (value == "1"):
-                self.impl.onButtonPress(nodeName)
+            value     = st.value(k)[0]
+            if (type == "button"):
+                if (value == "1"):
+                    self.impl.onButtonPress(nodeName)
+            elif (type == "crane"):
+                self.impl.onCraneMotion(sceneName, value == "1")
 
 class Control:
     def __init__(self,
@@ -99,8 +120,11 @@ class Control:
         # Listen to buttons' down state.
         keys = []
         for type, value in self.impl.buttons.items():
-            key = "button..{0}.selected".format(value)
+            key = "button.{0}.{1}.selected".format(sceneName, value)
             keys.append(key)
+        # Listen to crane motion.
+        key = "crane.{0}.{1}.moving".format(sceneName, CONTROL_CRANE_NAME)
+        keys.append(key)
         self.senv.addListener(keys, self.listenerSEnv)
         print "{0} Control.__init__".format(id(self))
     def __del__(self):
