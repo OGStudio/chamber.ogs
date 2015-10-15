@@ -18,6 +18,12 @@ class Crane2State(object):
         self.down     = CRANE2_MOVE_DOWN
         self.isMoving = False
         self.stepV    = CRANE2_DEFAULT_STEP_V
+    def validateNewStepV(self, value):
+        newStepV = self.stepV + value
+        ok = (newStepV >= 0) and (newStepV < CRANE2_STEPS_V)
+        if (ok):
+            self.stepV = newStepV
+        return ok
 
 class Crane2Impl(object):
     def __init__(self, scene, action, senv):
@@ -50,7 +56,6 @@ class Crane2Impl(object):
         self.senv.reportStateChange(st)
     def setEnabled(self, sceneName, nodeName, state):
         if (state):
-            # TODO: clone actions.
             st = pymjin2.State()
             # Setup main node.
             node = sceneName + "." + nodeName
@@ -76,7 +81,7 @@ class Crane2Impl(object):
         cs = self.enabled[node]
         if (cs.isMoving):
             return
-        if (not self.validateNewStepV(cs, value)):
+        if (not cs.validateNewStepV(value)):
             return
         cs.isMoving = True
         # Start the action.
@@ -89,12 +94,6 @@ class Crane2Impl(object):
         key = "crane.{0}.moving".format(node)
         st.set(key, "1")
         self.senv.setState(st)
-    def validateNewStepV(self, cs, value):
-        newStepV = cs.stepV + value
-        ok = (newStepV >= 0) and (newStepV < CRANE2_STEPS_V)
-        if (ok):
-            cs.stepV = newStepV
-        return ok
 
 class Crane2ListenerAction(pymjin2.ComponentListener):
     def __init__(self, impl):

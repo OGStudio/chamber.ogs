@@ -7,6 +7,18 @@ BUTTON_ACTION_DOWN_NAME  = "moveButtonDown"
 BUTTON_ACTION_PRESS_TYPE = "sequence"
 BUTTON_ACTION_PRESS_NAME = "pressButton"
 
+class ButtonState(object):
+    def __init__(self):
+        self.down  = None
+        self.press = None
+    def setActionGroup(self, groupName):
+        self.down = "{0}.{1}.{2}".format(BUTTON_ACTION_DOWN_TYPE,
+                                         groupName,
+                                         BUTTON_ACTION_DOWN_NAME)
+        self.press = "{0}.{1}.{2}".format(BUTTON_ACTION_PRESS_TYPE,
+                                          groupName,
+                                          BUTTON_ACTION_PRESS_NAME)
+
 class ButtonImpl(object):
     def __init__(self, scene, action, senv):
         # Refer.
@@ -36,40 +48,31 @@ class ButtonImpl(object):
         st.set(key, "0")
         self.senv.reportStateChange(st)
     def onSelection(self, sceneName, nodeName):
-        if ((sceneName not in self.selectable) or
-            (nodeName not in self.selectable[sceneName])):
+        node = sceneName + "." + nodeName
+        if (node not in self.selectable):
             return
-        actionPressName = self.selectable[sceneName][nodeName]["press"]
-        node = "{0}.{1}".format(sceneName, nodeName)
+        bs = self.selectable[node]
         st = pymjin2.State()
-        st.set("{0}.node".format(actionPressName), node)
-        st.set("{0}.active".format(actionPressName), "1")
+        st.set("{0}.node".format(bs.press), node)
+        st.set("{0}.active".format(bs.press), "1")
         self.action.setState(st)
     def setSelectable(self, sceneName, nodeName, state):
-        # Make sure scene exists.
-        if (sceneName not in self.selectable):
-            self.selectable[sceneName] = {}
+        node = sceneName + "." + nodeName
         if (state):
             key = "{0}.{1}.{2}.clone".format(BUTTON_ACTION_PRESS_TYPE,
                                              BUTTON_ACTION_GROUP,
                                              BUTTON_ACTION_PRESS_NAME)
             st = self.action.state([key])
             newGroupName = st.value(key)[0]
-            newActionPressName = "{0}.{1}.{2}".format(BUTTON_ACTION_PRESS_TYPE,
-                                                      newGroupName,
-                                                      BUTTON_ACTION_PRESS_NAME)
-            newActionDownName = "{0}.{1}.{2}".format(BUTTON_ACTION_DOWN_TYPE,
-                                                     newGroupName,
-                                                     BUTTON_ACTION_DOWN_NAME)
-            d = { "press" : newActionPressName,
-                  "down"  : newActionDownName }
-            self.selectable[sceneName][nodeName] = d
-            self.actions[newActionDownName] = "{0}.{1}".format(sceneName, nodeName)
+            bs = ButtonState()
+            self.selectable[node] = bs
+            bs.setActionGroup(newGroupName)
+            self.actions[bs.down] = node
         # Remove disabled.
-        elif (nodeName in self.selectable[sceneName]):
-            actionDownName = self.selectable[sceneName][nodeName]["down"]
-            del self.actions[actionDownName]
-            del self.selectable[sceneName][nodeName]
+        elif (node in self.selectable):
+            bs = self.selectable[node]
+            del self.actions[bs.down]
+            del self.selectable[node]
 
 class ButtonListenerAction(pymjin2.ComponentListener):
     def __init__(self, impl):
