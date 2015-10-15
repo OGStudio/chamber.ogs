@@ -40,40 +40,40 @@ class Crane2Impl(object):
         # Ignore other actions.
         if (actionName not in self.actions):
             return
-        sceneName, nodeName = self.actions[actionName].split(".")
-        cs = self.enabled[sceneName][nodeName]
+        node = self.actions[actionName]
+        cs = self.enabled[node]
         cs.isMoving = False
         # Report !isMoving.
         st = pymjin2.State()
-        key = "crane.{0}.{1}.moving".format(sceneName, nodeName)
+        key = "crane.{0}.moving".format(node)
         st.set(key, "0")
         self.senv.reportStateChange(st)
     def setEnabled(self, sceneName, nodeName, state):
-        # Make sure scene exists.
-        if (sceneName not in self.enabled):
-            self.enabled[sceneName] = {}
         if (state):
             # TODO: clone actions.
             st = pymjin2.State()
             # Setup main node.
-            craneName = sceneName + "." + nodeName
-            st.set("{0}.node".format(CRANE2_MOVE_DOWN), craneName)
-            st.set("{0}.node".format(CRANE2_MOVE_UP),   craneName)
+            node = sceneName + "." + nodeName
+            st.set("{0}.node".format(CRANE2_MOVE_DOWN), node)
+            st.set("{0}.node".format(CRANE2_MOVE_UP),   node)
             # Setup child node.
 #            craneArmsBaseName = sceneName + "." + craneArmsBase
 #            st.set("{0}.node".format(CRANE_MOVE_LEFT),  craneArmsBaseName)
 #            st.set("{0}.node".format(CRANE_MOVE_RIGHT), craneArmsBaseName)
             self.action.setState(st)
-            self.enabled[sceneName][nodeName] = Crane2State()
-            self.actions[CRANE2_MOVE_DOWN] = "{0}.{1}".format(sceneName, nodeName)
-            self.actions[CRANE2_MOVE_UP] = "{0}.{1}".format(sceneName, nodeName)
+            cs = Crane2State()
+            self.enabled[node] = cs
+            self.actions[cs.down] = node
+            self.actions[cs.up]   = node
         # Remove disabled.
-#        elif (nodeName in self.selectable[sceneName]):
-#            actionDownName = self.selectable[sceneName][nodeName]["down"]
-#            del self.actions[actionDownName]
-#            del self.selectable[sceneName][nodeName]
+        elif (node in self.enabled):
+            cs = self.enabled[node]
+            del self.actions[cs.down]
+            del self.actions[cs.up]
+            del self.enabled[node]
     def setStepDV(self, sceneName, nodeName, value):
-        cs = self.enabled[sceneName][nodeName]
+        node = sceneName + "." + nodeName
+        cs = self.enabled[node]
         if (cs.isMoving):
             return
         if (not self.validateNewStepV(cs, value)):
@@ -86,7 +86,7 @@ class Crane2Impl(object):
         self.action.setState(st)
         # Report isMoving.
         st = pymjin2.State()
-        key = "crane.{0}.{1}.moving".format(sceneName, nodeName)
+        key = "crane.{0}.moving".format(node)
         st.set(key, "1")
         self.senv.setState(st)
     def validateNewStepV(self, cs, value):
@@ -154,6 +154,7 @@ class Crane2:
         self.extension         = Crane2ExtensionScriptEnvironment(self.impl)
         # Prepare.
         # Listen to Crane2.
+        # TODO: update actions after cloning.
         keys = ["{0}.active".format(CRANE2_MOVE_UP),
                 "{0}.active".format(CRANE2_MOVE_DOWN)]
         self.action.addListener(keys, self.listenerAction)
