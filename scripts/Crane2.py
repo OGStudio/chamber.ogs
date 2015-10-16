@@ -82,18 +82,18 @@ class Crane2Impl(object):
     def setEnabled(self, sceneName, nodeName, state):
         if (state):
             node = sceneName + "." + nodeName
+            print "node", node
             cs = Crane2State()
             self.enabled[node] = cs
             st = pymjin2.State()
             # Setup main node actions.
             st.set("{0}.node".format(cs.down), node)
             st.set("{0}.node".format(cs.up),   node)
-            # Locate child node.
-            childNode = None
+            # Locate child nodes.
             key = "node.{0}.children".format(node)
-            st = self.scene.state([key])
-            if (len(st.keys)):
-                children = st.value(key)
+            st2 = self.scene.state([key])
+            if (len(st2.keys)):
+                children = st2.value(key)
                 for c in children:
                     if (c.endswith(CRANE2_ARMS_BASE_POSTFIX)):
                         armsBase = sceneName + "." + c
