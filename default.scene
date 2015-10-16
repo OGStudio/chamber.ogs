@@ -214,7 +214,7 @@ node
             model = models/lineSegmentLight.osgt
         controlLine
             parent = ROOT
-            position = 3.000000 13.000000 0.000000
+            position = 2.000000 13.000000 0.000000
             material = control
             model = models/control.osgt
             script = scripts/LineControls.py
@@ -262,7 +262,7 @@ node
             model = models/processor.osgt
         crane_base
             parent = ROOT
-            position = 0.000000 0.000016 8.100000
+            position = 0.000000 0.000020 8.100000
             material = crane_base_off
             model = models/crane_base.osgt
         crane_arms_base
@@ -450,5 +450,26 @@ node
             model = models/controlArrow.osgt
         seControlSignal
             parent = seControl
+            material = control_signal_off
+            model = models/controlSignal.osgt
+        seLiftControl
+            parent = ROOT
+            position = 6.000000 13.000000 0.000000
+            material = control
+            model = models/control.osgt
+            script = scripts/LiftControl.py
+        seLiftControlDown
+            parent = seLiftControl
+            position = 0.000000 0.000000 0.199998
+            material = control_arrow
+            model = models/controlArrow.osgt
+        seLiftControlUp
+            parent = seLiftControl
+            position = 0.000000 0.000000 0.199999
+            rotation = 0.000000 0.000000 180.000000
+            material = control_arrow
+            model = models/controlArrow.osgt
+        seLiftControlSignal
+            parent = seLiftControl
             material = control_signal_off
             model = models/controlSignal.osgt

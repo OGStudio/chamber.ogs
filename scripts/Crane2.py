@@ -1,17 +1,20 @@
 
 import pymjin2
 
-CRANE2_ARMS_BASE_POSTFIX = "arms_base"
+CRANE2_ARMS_BASE_POSTFIX   = "arms_base"
+CRANE2_ARMS_PISTON_POSTFIX = "arms_piston"
 
-CRANE2_MOVE_DOWN         = "moveBy.default.moveCraneDown"
-CRANE2_MOVE_LEFT         = "moveBy.default.moveBeltLeft"
-CRANE2_MOVE_RIGHT        = "moveBy.default.moveBeltRight"
-CRANE2_MOVE_UP           = "moveBy.default.moveCraneUp"
-
-CRANE2_DEFAULT_STEP_H    = 1
-CRANE2_DEFAULT_STEP_V    = 1
-CRANE2_STEPS_H           = 3
-CRANE2_STEPS_V           = 3
+CRANE2_MOVE_DOWN           = "moveBy.default.moveCraneDown"
+CRANE2_MOVE_LEFT           = "moveBy.default.moveBeltLeft"
+CRANE2_MOVE_RIGHT          = "moveBy.default.moveBeltRight"
+CRANE2_MOVE_UP             = "moveBy.default.moveCraneUp"
+                          
+CRANE2_DEFAULT_STEP_D      = 0
+CRANE2_DEFAULT_STEP_H      = 1
+CRANE2_DEFAULT_STEP_V      = 1
+CRANE2_STEPS_D             = 2
+CRANE2_STEPS_H             = 3
+CRANE2_STEPS_V             = 3
 
 class Crane2State(object):
     def __init__(self):
@@ -20,8 +23,15 @@ class Crane2State(object):
         self.left     = CRANE2_MOVE_LEFT
         self.right    = CRANE2_MOVE_RIGHT
         self.isMoving = False
+        self.stepD    = CRANE2_DEFAULT_STEP_D
         self.stepH    = CRANE2_DEFAULT_STEP_H
         self.stepV    = CRANE2_DEFAULT_STEP_V
+    def validateNewStepD(self, value):
+        newStepD = self.stepD + value
+        ok = (newStepD >= 0) and (newStepD < CRANE2_STEPS_D)
+        if (ok):
+            self.stepD = newStepD
+        return ok
     def validateNewStepH(self, value):
         newStepH = self.stepH + value
         ok = (newStepH >= 0) and (newStepH < CRANE2_STEPS_H)
@@ -84,7 +94,7 @@ class Crane2Impl(object):
                     if (c.endswith(CRANE2_ARMS_BASE_POSTFIX)):
                         childNode = sceneName + "." + c
                         break
-            # Setup child node actions.
+            # Setup child armsBase node actions.
             if (childNode):
                 st.set("{0}.node".format(cs.left),  childNode)
                 st.set("{0}.node".format(cs.right), childNode)
@@ -104,6 +114,8 @@ class Crane2Impl(object):
             del self.actions[cs.left]
             del self.actions[cs.right]
             del self.enabled[node]
+    def setStepDD(self, sceneName, nodeName, value):
+        print "setStepDD", nodeName, value
     def setStepDH(self, sceneName, nodeName, value):
         node = sceneName + "." + nodeName
         cs = self.enabled[node]
@@ -176,6 +188,8 @@ class Crane2ExtensionScriptEnvironment(pymjin2.Extension):
         property  = v[3]
         if (property == "enabled"):
             self.impl.setEnabled(sceneName, nodeName, value == "1")
+        elif (property == "stepdd"):
+            self.impl.setStepDD(sceneName, nodeName, int(value))
         elif (property == "stepdh"):
             self.impl.setStepDH(sceneName, nodeName, int(value))
         elif (property == "stepdv"):
