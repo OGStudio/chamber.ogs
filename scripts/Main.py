@@ -3,8 +3,10 @@ import pymjin2
 
 MAIN_DEPENDENCY_BUTTON = "scripts/Button.py"
 MAIN_DEPENDENCY_CRANE  = "scripts/Crane.py"
+MAIN_DEPENDENCY_LINE   = "scripts/Line.py"
 
 MAIN_CRANE             = "crane_base"
+MAIN_LINES             = ["lineBelt1", "lineBelt2", "lineBelt3"]
 
 class MainListenerScriptEnvironment(pymjin2.ComponentListener):
     def __init__(self, impl):
@@ -38,11 +40,17 @@ class Main:
         self.listenerSEnv = MainListenerScriptEnvironment(None)
         module = self.dependencies[MAIN_DEPENDENCY_CRANE]
         self.crane = module.Crane(scene, action, scriptEnvironment)
+        module = self.dependencies[MAIN_DEPENDENCY_LINE]
+        self.line = module.Line(scene, action, scriptEnvironment)
         # Prepare.
         st = pymjin2.State()
         # Enable crane.
         key = "crane.{0}.{1}.enabled".format(sceneName, MAIN_CRANE)
         st.set(key, "1")
+        # Enable lines.
+        for l in MAIN_LINES:
+            key = "line.{0}.{1}.enabled".format(sceneName, l)
+            st.set(key, "1")
         self.senv.setState(st)
         # Listen to button selection.
         #self.senv.addListener(["button...selected"], self.listenerSEnv)
@@ -58,6 +66,7 @@ class Main:
         # Destroy
         del self.button
         del self.crane
+        del self.line
         del self.listenerSEnv
         print "{0} Main.__del__".format(id(self))
 
@@ -76,7 +85,8 @@ def SCRIPT_CREATE(sceneName,
 
 def SCRIPT_DEPENDENCIES():
     return [MAIN_DEPENDENCY_BUTTON,
-            MAIN_DEPENDENCY_CRANE]
+            MAIN_DEPENDENCY_CRANE,
+            MAIN_DEPENDENCY_LINE]
 
 def SCRIPT_DESTROY(instance):
     del instance

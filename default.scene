@@ -217,7 +217,7 @@ node
             position = 4.000000 13.000000 0.000000
             material = control
             model = models/control.osgt
-            script = scripts/LineControls.py
+            script = scripts/LineControl.py
         controlArrowDown
             parent = controlLine
             position = 0.000000 0.000000 0.199998
