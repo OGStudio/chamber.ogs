@@ -9,7 +9,7 @@ node
             parent = ROOT
             material = floor
             model = models/floor.osgt
-            script = scripts/Main2.py
+            script = scripts/Main.py
         line2
             parent = ROOT
         lineSegment1
@@ -262,7 +262,7 @@ node
             model = models/processor.osgt
         crane_base
             parent = ROOT
-            position = 0.000000 0.000020 8.100000
+            position = 0.000000 0.000021 8.100000
             material = crane_base_off
             model = models/crane_base.osgt
         crane_arms_base
@@ -378,13 +378,13 @@ node
             model = models/controlArrow.osgt
         seControlUp
             parent = seControl
-            position = 0.000000 0.000000 0.199999
+            position = 0.000000 0.000000 0.200000
             rotation = 0.000000 0.000000 180.000000
             material = control_arrow
             model = models/controlArrow.osgt
         seControlRight
             parent = seControl
-            position = 0.000000 0.000000 0.199996
+            position = 0.000000 0.000000 0.199995
             rotation = 0.000000 0.000000 90.000000
             material = control_arrow
             model = models/controlArrow.osgt

@@ -1,55 +1,55 @@
 
 import pymjin2
 
-CRANE2_ARMS_BASE_POSTFIX   = "arms_base"
-CRANE2_ARMS_PISTON_POSTFIX = "arms_piston"
+CRANE_ARMS_BASE_POSTFIX   = "arms_base"
+CRANE_ARMS_PISTON_POSTFIX = "arms_piston"
 
-CRANE2_LIFT                = "moveBy.default.liftCranePiston"
-CRANE2_LOWER               = "moveBy.default.lowerCranePiston"
-CRANE2_MOVE_DOWN           = "moveBy.default.moveCraneDown"
-CRANE2_MOVE_LEFT           = "moveBy.default.moveBeltLeft"
-CRANE2_MOVE_RIGHT          = "moveBy.default.moveBeltRight"
-CRANE2_MOVE_UP             = "moveBy.default.moveCraneUp"
-                          
-CRANE2_DEFAULT_STEP_D      = 0
-CRANE2_DEFAULT_STEP_H      = 1
-CRANE2_DEFAULT_STEP_V      = 1
-CRANE2_STEPS_D             = 2
-CRANE2_STEPS_H             = 3
-CRANE2_STEPS_V             = 3
+CRANE_LIFT                = "moveBy.default.liftCranePiston"
+CRANE_LOWER               = "moveBy.default.lowerCranePiston"
+CRANE_MOVE_DOWN           = "moveBy.default.moveCraneDown"
+CRANE_MOVE_LEFT           = "moveBy.default.moveBeltLeft"
+CRANE_MOVE_RIGHT          = "moveBy.default.moveBeltRight"
+CRANE_MOVE_UP             = "moveBy.default.moveCraneUp"
+                         
+CRANE_DEFAULT_STEP_D      = 0
+CRANE_DEFAULT_STEP_H      = 1
+CRANE_DEFAULT_STEP_V      = 1
+CRANE_STEPS_D             = 2
+CRANE_STEPS_H             = 3
+CRANE_STEPS_V             = 3
 
-class Crane2State(object):
+class CraneState(object):
     def __init__(self):
-        self.up       = CRANE2_MOVE_UP
-        self.down     = CRANE2_MOVE_DOWN
-        self.left     = CRANE2_MOVE_LEFT
-        self.right    = CRANE2_MOVE_RIGHT
-        self.lift     = CRANE2_LIFT
-        self.lower    = CRANE2_LOWER
+        self.up       = CRANE_MOVE_UP
+        self.down     = CRANE_MOVE_DOWN
+        self.left     = CRANE_MOVE_LEFT
+        self.right    = CRANE_MOVE_RIGHT
+        self.lift     = CRANE_LIFT
+        self.lower    = CRANE_LOWER
         self.isMoving = False
-        self.stepD    = CRANE2_DEFAULT_STEP_D
-        self.stepH    = CRANE2_DEFAULT_STEP_H
-        self.stepV    = CRANE2_DEFAULT_STEP_V
+        self.stepD    = CRANE_DEFAULT_STEP_D
+        self.stepH    = CRANE_DEFAULT_STEP_H
+        self.stepV    = CRANE_DEFAULT_STEP_V
     def validateNewStepD(self, value):
         newStepD = self.stepD + value
-        ok = (newStepD >= 0) and (newStepD < CRANE2_STEPS_D)
+        ok = (newStepD >= 0) and (newStepD < CRANE_STEPS_D)
         if (ok):
             self.stepD = newStepD
         return ok
     def validateNewStepH(self, value):
         newStepH = self.stepH + value
-        ok = (newStepH >= 0) and (newStepH < CRANE2_STEPS_H)
+        ok = (newStepH >= 0) and (newStepH < CRANE_STEPS_H)
         if (ok):
             self.stepH = newStepH
         return ok
     def validateNewStepV(self, value):
         newStepV = self.stepV + value
-        ok = (newStepV >= 0) and (newStepV < CRANE2_STEPS_V)
+        ok = (newStepV >= 0) and (newStepV < CRANE_STEPS_V)
         if (ok):
             self.stepV = newStepV
         return ok
 
-class Crane2Impl(object):
+class CraneImpl(object):
     def __init__(self, scene, action, senv):
         # Refer.
         self.scene  = scene
@@ -83,7 +83,7 @@ class Crane2Impl(object):
         if (state):
             node = sceneName + "." + nodeName
             print "node", node
-            cs = Crane2State()
+            cs = CraneState()
             self.enabled[node] = cs
             st = pymjin2.State()
             # Setup main node actions.
@@ -95,11 +95,11 @@ class Crane2Impl(object):
             if (len(st2.keys)):
                 children = st2.value(key)
                 for c in children:
-                    if (c.endswith(CRANE2_ARMS_BASE_POSTFIX)):
+                    if (c.endswith(CRANE_ARMS_BASE_POSTFIX)):
                         armsBase = sceneName + "." + c
                         st.set("{0}.node".format(cs.left),  armsBase)
                         st.set("{0}.node".format(cs.right), armsBase)
-                    elif (c.endswith(CRANE2_ARMS_PISTON_POSTFIX)):
+                    elif (c.endswith(CRANE_ARMS_PISTON_POSTFIX)):
                         piston = sceneName + "." + c
                         st.set("{0}.node".format(cs.lift),  piston)
                         st.set("{0}.node".format(cs.lower), piston)
@@ -163,7 +163,7 @@ class Crane2Impl(object):
         self.action.setState(st)
         self.reportMoving(node, "1")
 
-class Crane2ListenerAction(pymjin2.ComponentListener):
+class CraneListenerAction(pymjin2.ComponentListener):
     def __init__(self, impl):
         pymjin2.ComponentListener.__init__(self)
         # Refer.
@@ -177,7 +177,7 @@ class Crane2ListenerAction(pymjin2.ComponentListener):
             state = (st.value(k)[0] == "1")
             self.impl.onActionState(actionName, state)
 
-class Crane2ExtensionScriptEnvironment(pymjin2.Extension):
+class CraneExtensionScriptEnvironment(pymjin2.Extension):
     def __init__(self, impl):
         pymjin2.Extension.__init__(self)
         # Refer.
@@ -185,11 +185,11 @@ class Crane2ExtensionScriptEnvironment(pymjin2.Extension):
     def deinit(self):
         # Derefer.
         self.impl = None
-        print "Crane2Ext.deinit"
+        print "CraneExt.deinit"
     def description(self):
-        return "Turn any node into a simple Crane2"
+        return "Turn any node into a simple Crane"
     def get(self, st, key):
-        print "Crane2.get({0})".format(key)
+        print "Crane.get({0})".format(key)
     def keys(self):
         return ["crane...enabled",
                 "crane...moving",
@@ -197,9 +197,9 @@ class Crane2ExtensionScriptEnvironment(pymjin2.Extension):
                 "crane...stepdv",
                 "crane...stepdd"]
     def name(self):
-        return "Crane2ExtensionScriptEnvironment"
+        return "CraneExtensionScriptEnvironment"
     def set(self, key, value):
-        #print "Crane2.set({0}, {1})".format(key, value)
+        #print "Crane.set({0}, {1})".format(key, value)
         v = key.split(".")
         sceneName = v[1]
         nodeName  = v[2]
@@ -213,27 +213,27 @@ class Crane2ExtensionScriptEnvironment(pymjin2.Extension):
         elif (property == "stepdv"):
             self.impl.setStepDV(sceneName, nodeName, int(value))
 
-class Crane2:
+class Crane:
     def __init__(self, scene, action, scriptEnvironment):
         # Refer.
         self.scene  = scene
         self.action = action
         self.senv   = scriptEnvironment
         # Create.
-        self.impl              = Crane2Impl(scene, action, scriptEnvironment)
-        self.listenerAction    = Crane2ListenerAction(self.impl)
-        self.extension         = Crane2ExtensionScriptEnvironment(self.impl)
+        self.impl              = CraneImpl(scene, action, scriptEnvironment)
+        self.listenerAction    = CraneListenerAction(self.impl)
+        self.extension         = CraneExtensionScriptEnvironment(self.impl)
         # Prepare.
-        # Listen to Crane2.
-        keys = ["{0}.active".format(CRANE2_MOVE_UP),
-                "{0}.active".format(CRANE2_MOVE_DOWN),
-                "{0}.active".format(CRANE2_MOVE_LEFT),
-                "{0}.active".format(CRANE2_MOVE_RIGHT),
-                "{0}.active".format(CRANE2_LIFT),
-                "{0}.active".format(CRANE2_LOWER)]
+        # Listen to Crane.
+        keys = ["{0}.active".format(CRANE_MOVE_UP),
+                "{0}.active".format(CRANE_MOVE_DOWN),
+                "{0}.active".format(CRANE_MOVE_LEFT),
+                "{0}.active".format(CRANE_MOVE_RIGHT),
+                "{0}.active".format(CRANE_LIFT),
+                "{0}.active".format(CRANE_LOWER)]
         self.action.addListener(keys, self.listenerAction)
         self.senv.addExtension(self.extension)
-        print "{0} Crane2.__init__".format(id(self))
+        print "{0} Crane.__init__".format(id(self))
     def __del__(self):
         # Tear down.
         self.action.removeListener(self.listenerAction)
@@ -246,5 +246,5 @@ class Crane2:
         self.scene  = None
         self.action = None
         self.senv   = None
-        print "{0} Crane2.__del__".format(id(self))
+        print "{0} Crane.__del__".format(id(self))
 

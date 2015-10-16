@@ -1,16 +1,12 @@
 
 import pymjin2
 
-MAIN2_DEPENDENCY_BUTTON = "scripts/Button.py"
-MAIN2_DEPENDENCY_CRANE  = "scripts/Crane2.py"
+MAIN_DEPENDENCY_BUTTON = "scripts/Button.py"
+MAIN_DEPENDENCY_CRANE  = "scripts/Crane.py"
 
-MAIN2_BUTTON_CRANE_STEP_V_DEC = "seControlDown"
-MAIN2_BUTTON_CRANE_STEP_V_INC = "seControlUp"
-MAIN2_BUTTON_CRANE_STEP_H_DEC = "seControlLeft"
-MAIN2_BUTTON_CRANE_STEP_H_INC = "seControlRight"
-MAIN2_CRANE                   = "crane_base"
+MAIN_CRANE             = "crane_base"
 
-class Main2ListenerScriptEnvironment(pymjin2.ComponentListener):
+class MainListenerScriptEnvironment(pymjin2.ComponentListener):
     def __init__(self, impl):
         pymjin2.ComponentListener.__init__(self)
         # Refer.
@@ -20,9 +16,9 @@ class Main2ListenerScriptEnvironment(pymjin2.ComponentListener):
         self.impl = None
     def onComponentStateChange(self, st):
         for k in st.keys:
-            print "Main2", k, st.value(k)
+            print "Main", k, st.value(k)
 
-class Main2:
+class Main:
     def __init__(self,
                  sceneName,
                  nodeName,
@@ -37,28 +33,20 @@ class Main2:
         self.senv         = scriptEnvironment
         self.dependencies = dependencies
         # Create.
-        module = self.dependencies[MAIN2_DEPENDENCY_BUTTON]
+        module = self.dependencies[MAIN_DEPENDENCY_BUTTON]
         self.button = module.Button(scene, action, scriptEnvironment)
-        self.listenerSEnv = Main2ListenerScriptEnvironment(None)
-        module = self.dependencies[MAIN2_DEPENDENCY_CRANE]
-        self.crane = module.Crane2(scene, action, scriptEnvironment)
+        self.listenerSEnv = MainListenerScriptEnvironment(None)
+        module = self.dependencies[MAIN_DEPENDENCY_CRANE]
+        self.crane = module.Crane(scene, action, scriptEnvironment)
         # Prepare.
-        # Mark crane buttons selectable.
-        buttons = [MAIN2_BUTTON_CRANE_STEP_V_DEC,
-                   MAIN2_BUTTON_CRANE_STEP_V_INC,
-                   MAIN2_BUTTON_CRANE_STEP_H_DEC,
-                   MAIN2_BUTTON_CRANE_STEP_H_INC]
         st = pymjin2.State()
-        for b in buttons:
-            key = "button.{0}.{1}.selectable".format(sceneName, b)
-            st.set(key, "1")
         # Enable crane.
-        key = "crane.{0}.{1}.enabled".format(sceneName, MAIN2_CRANE)
+        key = "crane.{0}.{1}.enabled".format(sceneName, MAIN_CRANE)
         st.set(key, "1")
         self.senv.setState(st)
         # Listen to button selection.
         #self.senv.addListener(["button...selected"], self.listenerSEnv)
-        print "{0} Main2.__init__({1}, {2})".format(id(self), sceneName, nodeName)
+        print "{0} Main.__init__({1}, {2})".format(id(self), sceneName, nodeName)
     def __del__(self):
         # Tear down.
         self.senv.removeListener(self.listenerSEnv)
@@ -71,7 +59,7 @@ class Main2:
         del self.button
         del self.crane
         del self.listenerSEnv
-        print "{0} Main2.__del__".format(id(self))
+        print "{0} Main.__del__".format(id(self))
 
 def SCRIPT_CREATE(sceneName,
                   nodeName,
@@ -79,16 +67,16 @@ def SCRIPT_CREATE(sceneName,
                   action,
                   scriptEnvironment,
                   dependencies):
-    return Main2(sceneName,
-                 nodeName,
-                 scene,
-                 action,
-                 scriptEnvironment,
-                 dependencies)
+    return Main(sceneName,
+                nodeName,
+                scene,
+                action,
+                scriptEnvironment,
+                dependencies)
 
 def SCRIPT_DEPENDENCIES():
-    return [MAIN2_DEPENDENCY_BUTTON,
-            MAIN2_DEPENDENCY_CRANE]
+    return [MAIN_DEPENDENCY_BUTTON,
+            MAIN_DEPENDENCY_CRANE]
 
 def SCRIPT_DESTROY(instance):
     del instance
