@@ -1,13 +1,14 @@
 
 import pymjin2
 
-CRANE2_ARMS_BASE_POSTFIX = "_arms_base"
+CRANE2_ARMS_BASE_POSTFIX = "arms_base"
 
 CRANE2_MOVE_DOWN         = "moveBy.default.moveCraneDown"
 CRANE2_MOVE_LEFT         = "moveBy.default.moveBeltLeft"
 CRANE2_MOVE_RIGHT        = "moveBy.default.moveBeltRight"
 CRANE2_MOVE_UP           = "moveBy.default.moveCraneUp"
 
+CRANE2_DEFAULT_STEP_H    = 1
 CRANE2_DEFAULT_STEP_V    = 1
 CRANE2_STEPS_H           = 3
 CRANE2_STEPS_V           = 3
@@ -16,8 +17,17 @@ class Crane2State(object):
     def __init__(self):
         self.up       = CRANE2_MOVE_UP
         self.down     = CRANE2_MOVE_DOWN
+        self.left     = CRANE2_MOVE_LEFT
+        self.right    = CRANE2_MOVE_RIGHT
         self.isMoving = False
+        self.stepH    = CRANE2_DEFAULT_STEP_H
         self.stepV    = CRANE2_DEFAULT_STEP_V
+    def validateNewStepH(self, value):
+        newStepH = self.stepH + value
+        ok = (newStepH >= 0) and (newStepH < CRANE2_STEPS_H)
+        if (ok):
+            self.stepH = newStepH
+        return ok
     def validateNewStepV(self, value):
         newStepV = self.stepV + value
         ok = (newStepV >= 0) and (newStepV < CRANE2_STEPS_V)
@@ -49,33 +59,65 @@ class Crane2Impl(object):
         node = self.actions[actionName]
         cs = self.enabled[node]
         cs.isMoving = False
-        # Report !isMoving.
+        self.reportMoving(node, "0")
+    def reportMoving(self, node, value):
         st = pymjin2.State()
         key = "crane.{0}.moving".format(node)
-        st.set(key, "0")
+        st.set(key, value)
         self.senv.reportStateChange(st)
     def setEnabled(self, sceneName, nodeName, state):
         if (state):
-            st = pymjin2.State()
-            # Setup main node.
             node = sceneName + "." + nodeName
-            st.set("{0}.node".format(CRANE2_MOVE_DOWN), node)
-            st.set("{0}.node".format(CRANE2_MOVE_UP),   node)
-            # Setup child node.
-#            craneArmsBaseName = sceneName + "." + craneArmsBase
-#            st.set("{0}.node".format(CRANE_MOVE_LEFT),  craneArmsBaseName)
-#            st.set("{0}.node".format(CRANE_MOVE_RIGHT), craneArmsBaseName)
-            self.action.setState(st)
             cs = Crane2State()
             self.enabled[node] = cs
-            self.actions[cs.down] = node
-            self.actions[cs.up]   = node
+            st = pymjin2.State()
+            # Setup main node actions.
+            st.set("{0}.node".format(cs.down), node)
+            st.set("{0}.node".format(cs.up),   node)
+            # Locate child node.
+            childNode = None
+            key = "node.{0}.children".format(node)
+            st = self.scene.state([key])
+            if (len(st.keys)):
+                children = st.value(key)
+                for c in children:
+                    if (c.endswith(CRANE2_ARMS_BASE_POSTFIX)):
+                        childNode = sceneName + "." + c
+                        break
+            # Setup child node actions.
+            if (childNode):
+                st.set("{0}.node".format(cs.left),  childNode)
+                st.set("{0}.node".format(cs.right), childNode)
+            else:
+                print "Could not find '{0}' child of '{1}'".format(
+                    CRANE2_ARMS_BASE_POSTFIX, node)
+            self.action.setState(st)
+            self.actions[cs.up]    = node
+            self.actions[cs.down]  = node
+            self.actions[cs.left]  = node
+            self.actions[cs.right] = node
         # Remove disabled.
         elif (node in self.enabled):
             cs = self.enabled[node]
-            del self.actions[cs.down]
             del self.actions[cs.up]
+            del self.actions[cs.down]
+            del self.actions[cs.left]
+            del self.actions[cs.right]
             del self.enabled[node]
+    def setStepDH(self, sceneName, nodeName, value):
+        node = sceneName + "." + nodeName
+        cs = self.enabled[node]
+        if (cs.isMoving):
+            return
+        if (not cs.validateNewStepH(value)):
+            return
+        cs.isMoving = True
+        # Start the action.
+        st = pymjin2.State()
+        key = "{0}.active".format(cs.left if value < 0 else cs.right)
+        st.set(key, "1")
+        self.action.setState(st)
+        self.reportMoving(node, "1")
     def setStepDV(self, sceneName, nodeName, value):
         node = sceneName + "." + nodeName
         cs = self.enabled[node]
@@ -89,11 +131,7 @@ class Crane2Impl(object):
         key = "{0}.active".format(cs.up if value < 0 else cs.down)
         st.set(key, "1")
         self.action.setState(st)
-        # Report isMoving.
-        st = pymjin2.State()
-        key = "crane.{0}.moving".format(node)
-        st.set(key, "1")
-        self.senv.setState(st)
+        self.reportMoving(node, "1")
 
 class Crane2ListenerAction(pymjin2.ComponentListener):
     def __init__(self, impl):
@@ -138,6 +176,8 @@ class Crane2ExtensionScriptEnvironment(pymjin2.Extension):
         property  = v[3]
         if (property == "enabled"):
             self.impl.setEnabled(sceneName, nodeName, value == "1")
+        elif (property == "stepdh"):
+            self.impl.setStepDH(sceneName, nodeName, int(value))
         elif (property == "stepdv"):
             self.impl.setStepDV(sceneName, nodeName, int(value))
 
@@ -153,9 +193,10 @@ class Crane2:
         self.extension         = Crane2ExtensionScriptEnvironment(self.impl)
         # Prepare.
         # Listen to Crane2.
-        # TODO: update actions after cloning.
         keys = ["{0}.active".format(CRANE2_MOVE_UP),
-                "{0}.active".format(CRANE2_MOVE_DOWN)]
+                "{0}.active".format(CRANE2_MOVE_DOWN),
+                "{0}.active".format(CRANE2_MOVE_LEFT),
+                "{0}.active".format(CRANE2_MOVE_RIGHT)]
         self.action.addListener(keys, self.listenerAction)
         self.senv.addExtension(self.extension)
         print "{0} Crane2.__init__".format(id(self))

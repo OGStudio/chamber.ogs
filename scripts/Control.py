@@ -39,23 +39,26 @@ class ControlImpl(object):
             st.set(key, "1")
         self.senv.setState(st)
     def onButtonPress(self, sceneName, nodeName):
-        craneStepVDiff = 0
+        craneStepV = 0
         if (nodeName == self.cs.down):
-            craneStepVDiff = 1
+            craneStepV = 1
         elif (nodeName == self.cs.up):
-            craneStepVDiff = -1
-#        elif (nodeName == self.buttons["left"]):
-#            print "left"
-#        elif (nodeName == self.buttons["right"]):
-#            print "right"
-        if (craneStepVDiff):
-            print "crane step V diff:", craneStepVDiff
+            craneStepV = -1
+        elif (nodeName == self.cs.left):
+            craneStepH = -1
+        elif (nodeName == self.cs.right):
+            craneStepH = 1
+        if (craneStepV):
             st = pymjin2.State()
             key = "crane.{0}.{1}.stepdv".format(sceneName, CONTROL_CRANE_NAME)
-            st.set(key, str(craneStepVDiff))
+            st.set(key, str(craneStepV))
+            self.senv.setState(st)
+        elif (craneStepH):
+            st = pymjin2.State()
+            key = "crane.{0}.{1}.stepdh".format(sceneName, CONTROL_CRANE_NAME)
+            st.set(key, str(craneStepH))
             self.senv.setState(st)
     def onCraneMotion(self, sceneName, state):
-        print "onCraneMotion", state
         mat = CONTROL_SIGNAL_MATERIAL_OFF
         if (state):
             mat = CONTROL_SIGNAL_MATERIAL_ON
