@@ -6,7 +6,12 @@ LINE_CONTROL_BUTTON_POSTFIX_LEFT  = "Left"
 LINE_CONTROL_BUTTON_POSTFIX_RIGHT = "Right"
 LINE_CONTROL_BUTTON_POSTFIX_UP    = "Up"
 
-LINE_CONTROL_LINES = ["lineBelt1", "lineBelt2", "lineBelt3"]
+LINE_CONTROL_DEFAULT_LINE_ID      = 0
+LINE_CONTROL_LINES                = ["lineBelt1", "lineBelt2", "lineBelt3"]
+
+LINE_CONTROL_LIGHTS               = ["lineLight1", "lineLight2", "lineLight3"]
+LINE_CONTROL_LIGHT_MATERIAL_ON    = "line_segment_light_on"
+LINE_CONTROL_LIGHT_MATERIAL_OFF   = "line_segment_light_off"
 
 LINE_CONTROL_SIGNAL_MATERIAL_OFF  = "control_signal_off"
 LINE_CONTROL_SIGNAL_MATERIAL_ON   = "control_signal_on"
@@ -18,12 +23,13 @@ class LineControlImpl(object):
         self.scene = scene
         self.senv  = senv
         # Create.
-        self.buttons = {    "up" : None,
-                          "down" : None,
-                          "left" : None,
-                         "right" : None }
-        self.signal = None
-        self.lineID = 0
+        self.buttons  = {    "up" : None,
+                           "down" : None,
+                           "left" : None,
+                          "right" : None }
+        self.signal   = None
+        self.lineID   = LINE_CONTROL_DEFAULT_LINE_ID
+        self.isMoving = False
     def __del__(self):
         # Derefer.
         self.scene = None
@@ -41,18 +47,24 @@ class LineControlImpl(object):
             st.set(key, "1")
         self.senv.setState(st)
     def onButtonPress(self, sceneName, nodeName):
-        print "LineControl.onButtonPress", nodeName
         lineStep = 0
+        lineID = 0
         if (nodeName == self.buttons["left"]):
             lineStep = -1
         elif (nodeName == self.buttons["right"]):
             lineStep = 1
+        elif (nodeName == self.buttons["up"]):
+            lineID = -1
+        elif (nodeName == self.buttons["down"]):
+            lineID = 1
         if (lineStep):
             st = pymjin2.State()
             lineName = LINE_CONTROL_LINES[self.lineID]
             key = "line.{0}.{1}.stepd".format(sceneName, lineName)
             st.set(key, str(lineStep))
             self.senv.setState(st)
+        elif (lineID):
+            self.setLineIDD(sceneName, lineID)
     def onLineMotion(self, sceneName, state):
         mat = LINE_CONTROL_SIGNAL_MATERIAL_OFF
         if (state):
@@ -61,6 +73,7 @@ class LineControlImpl(object):
         st = pymjin2.State()
         st.set(key, mat)
         self.scene.setState(st)
+        self.isMoving = state
     def resolveButtons(self, sceneName, nodeName):
         key = "node.{0}.{1}.children".format(sceneName, nodeName)
         st = self.scene.state([key])
@@ -79,6 +92,36 @@ class LineControlImpl(object):
                 self.buttons["up"] = c
             elif (c.endswith(LINE_CONTROL_SIGNAL_POSTFIX)):
                 self.signal = c
+    def setLineIDD(self, sceneName, value):
+        if (self.isMoving):
+            return
+        oldID = self.lineID
+        if (not self.validateNewLineID(value)):
+            return
+        self.setLineLightState(sceneName,
+                               LINE_CONTROL_LIGHTS[oldID],
+                               False)
+        self.setLineLightState(sceneName,
+                               LINE_CONTROL_LIGHTS[self.lineID],
+                               True)
+    def setLineLightState(self, sceneName, nodeName, state):
+        key = "node.{0}.{1}.children".format(sceneName, nodeName)
+        st = self.scene.state([key])
+        mat = LINE_CONTROL_LIGHT_MATERIAL_OFF
+        if (state):
+            mat = LINE_CONTROL_LIGHT_MATERIAL_ON
+        st2 = pymjin2.State()
+        children = st.value(key)
+        for c in children:
+            key = "node.{0}.{1}.material".format(sceneName, c)
+            st2.set(key, mat)
+        self.scene.setState(st2)
+    def validateNewLineID(self, value):
+        newID = self.lineID + value
+        ok = (newID >= 0) and (newID < len(LINE_CONTROL_LINES))
+        if (ok):
+            self.lineID = newID
+        return ok
 
 class LineControlListenerScriptEnvironment(pymjin2.ComponentListener):
     def __init__(self, impl):
