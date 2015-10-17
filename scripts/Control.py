@@ -38,6 +38,11 @@ class ControlImpl(object):
             key = "button.{0}.{1}.selectable".format(sceneName, b)
             st.set(key, "1")
         self.senv.setState(st)
+    def enableCrane(self, sceneName):
+        st = pymjin2.State()
+        key = "crane.{0}.{1}.enabled".format(sceneName, CONTROL_CRANE_NAME)
+        st.set(key, "1")
+        self.senv.setState(st)
     def onButtonPress(self, sceneName, nodeName):
         craneStepV = 0
         if (nodeName == self.cs.down):
@@ -123,6 +128,7 @@ class Control:
         # Prepare.
         self.impl.resolveButtons(sceneName, nodeName)
         self.impl.enableButtons(sceneName)
+        self.impl.enableCrane(sceneName)
         # Listen to buttons' down state.
         keys = []
         buttons = [self.impl.cs.up,
