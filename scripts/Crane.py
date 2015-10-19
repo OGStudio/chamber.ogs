@@ -73,16 +73,19 @@ class CraneImpl(object):
         node = self.actions[actionName]
         cs = self.enabled[node]
         cs.isMoving = False
-        self.reportMoving(node, "0")
-    def reportMoving(self, node, value):
+        self.report(node, "moving", "0")
+        # Report current 'stepd' value.
+        if ((actionName == cs.lift) or
+            (actionName == cs.lower)):
+            self.report(node, "stepd", str(cs.stepD))
+    def report(self, node, property, value):
         st = pymjin2.State()
-        key = "crane.{0}.moving".format(node)
+        key = "crane.{0}.{1}".format(node, property)
         st.set(key, value)
         self.senv.reportStateChange(st)
     def setEnabled(self, sceneName, nodeName, state):
         if (state):
             node = sceneName + "." + nodeName
-            print "node", node
             cs = CraneState()
             self.enabled[node] = cs
             st = pymjin2.State()
@@ -133,7 +136,7 @@ class CraneImpl(object):
         key = "{0}.active".format(cs.lift if value < 0 else cs.lower)
         st.set(key, "1")
         self.action.setState(st)
-        self.reportMoving(node, "1")
+        self.report(node, "moving", "1")
     def setStepDH(self, sceneName, nodeName, value):
         node = sceneName + "." + nodeName
         cs = self.enabled[node]
@@ -147,7 +150,7 @@ class CraneImpl(object):
         key = "{0}.active".format(cs.left if value < 0 else cs.right)
         st.set(key, "1")
         self.action.setState(st)
-        self.reportMoving(node, "1")
+        self.report(node, "moving", "1")
     def setStepDV(self, sceneName, nodeName, value):
         node = sceneName + "." + nodeName
         cs = self.enabled[node]
@@ -161,7 +164,7 @@ class CraneImpl(object):
         key = "{0}.active".format(cs.up if value < 0 else cs.down)
         st.set(key, "1")
         self.action.setState(st)
-        self.reportMoving(node, "1")
+        self.report(node, "moving", "1")
 
 class CraneListenerAction(pymjin2.ComponentListener):
     def __init__(self, impl):
@@ -195,6 +198,7 @@ class CraneExtensionScriptEnvironment(pymjin2.Extension):
                 "crane...moving",
                 "crane...stepdh",
                 "crane...stepdv",
+                "crane...stepd",
                 "crane...stepdd"]
     def name(self):
         return "CraneExtensionScriptEnvironment"

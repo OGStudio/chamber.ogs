@@ -419,3 +419,6 @@ node
             parent = seLiftControl
             material = control_signal_off
             model = models/controlSignal.osgt
+        exchange1
+            parent = ROOT
+            position = 3.000000 -8.000000 1.000000
