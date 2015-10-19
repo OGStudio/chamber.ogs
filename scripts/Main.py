@@ -1,13 +1,16 @@
 
 import pymjin2
 
-MAIN_DEPENDENCY_BUTTON = "scripts/Button.py"
-MAIN_DEPENDENCY_CRANE  = "scripts/Crane.py"
-MAIN_DEPENDENCY_LINE   = "scripts/Line.py"
-
+MAIN_DEPENDENCY_BUTTON   = "scripts/Button.py"
+MAIN_DEPENDENCY_CRANE    = "scripts/Crane.py"
+MAIN_DEPENDENCY_EXCHANGE = "scripts/Exchange.py"
+MAIN_DEPENDENCY_LINE     = "scripts/Line.py"
+                        
 # WARNING: Duplicates constant in Control.py.
 MAIN_CRANE_NAME        = "crane_base"
 MAIN_CRANE_PISTON_NAME = "crane_arms_piston"
+MAIN_EXCHANGE_NAMES    = ["exchange1"]
+MAIN_EXCHANGE_SUBJECT  = "subject"
 
 class MainImpl(object):
     def __init__(self, scene, senv):
@@ -72,6 +75,8 @@ class Main:
         self.button = moduleB.Button(scene, action, scriptEnvironment)
         moduleC = self.dependencies[MAIN_DEPENDENCY_CRANE]
         self.crane = moduleC.Crane(scene, action, scriptEnvironment)
+        moduleE = self.dependencies[MAIN_DEPENDENCY_EXCHANGE]
+        self.exchange = moduleE.Exchange(scene, action, scriptEnvironment)
         moduleL = self.dependencies[MAIN_DEPENDENCY_LINE]
         self.line = moduleL.Line(scene, action, scriptEnvironment)
         self.impl = MainImpl(self.scene, self.senv)
@@ -80,6 +85,15 @@ class Main:
         # Listen to crane lowering.
         key = "crane.{0}.{1}.stepd".format(sceneName, MAIN_CRANE_NAME)
         self.senv.addListener([key], self.listenerSEnv)
+        # Enable exchange points and set their subject.
+        st = pymjin2.State()
+        for name in MAIN_EXCHANGE_NAMES:
+            prefix = "exchange.{0}.{1}".format(sceneName, name)
+            key = "{0}.enabled".format(prefix)
+            st.set(key, "1")
+            key = "{0}.subject".format(prefix)
+            st.set(key, MAIN_EXCHANGE_SUBJECT)
+        self.senv.setState(st)
         print "{0} Main.__init__({1}, {2})".format(id(self), sceneName, nodeName)
     def __del__(self):
         # Tear down.
@@ -92,6 +106,7 @@ class Main:
         # Destroy
         del self.button
         del self.crane
+        del self.exchange
         del self.line
         del self.listenerSEnv
         del self.impl
@@ -113,6 +128,7 @@ def SCRIPT_CREATE(sceneName,
 def SCRIPT_DEPENDENCIES():
     return [MAIN_DEPENDENCY_BUTTON,
             MAIN_DEPENDENCY_CRANE,
+            MAIN_DEPENDENCY_EXCHANGE,
             MAIN_DEPENDENCY_LINE]
 
 def SCRIPT_DESTROY(instance):
