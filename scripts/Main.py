@@ -9,7 +9,12 @@ MAIN_DEPENDENCY_LINE     = "scripts/Line.py"
 # WARNING: Duplicates Control.py.
 MAIN_CRANE_NAME          = "crane_base"
 MAIN_CRANE_PISTON_NAME   = "crane_arms_piston"
-MAIN_EXCHANGE_NAMES      = ["exchange11"]
+MAIN_EXCHANGE_NAMES      = ["exchange11",
+                            "exchange12",
+                            "exchange21",
+                            "exchange22",
+                            "exchange31",
+                            "exchange32"]
 # WARNING: Duplicates LineControl.py.
 MAIN_EXCHANGE_LINES      = ["lineBelt1", "lineBelt2", "lineBelt3"]
 MAIN_EXCHANGE_SUBJECT    = "subject"
@@ -102,6 +107,12 @@ class Main:
             if (name.endswith("11") or
                 name.endswith("12")):
                 st.add(key, MAIN_EXCHANGE_LINES[0])
+            elif (name.endswith("21") or
+                name.endswith("22")):
+                st.add(key, MAIN_EXCHANGE_LINES[1])
+            elif (name.endswith("31") or
+                name.endswith("32")):
+                st.add(key, MAIN_EXCHANGE_LINES[2])
         self.senv.setState(st)
         keys = [
             # Listen to crane lowering.
