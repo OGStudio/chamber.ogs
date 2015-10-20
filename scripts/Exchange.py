@@ -24,48 +24,61 @@ class ExchangeImpl(object):
         self.senv   = None
     def exchange(self, sceneName, nodeName):
         node = sceneName + "." + nodeName
-        if (node in self.enabled):
-            es = self.enabled[node]
-            print "exchange with owners", es.owners
-            subjectPrefix = "node.{0}.{1}".format(sceneName, es.subject)
-            key = "{0}.parent".format(subjectPrefix)
-            st = self.scene.state([key])
-            parent = st.value(key)[0]
-            print "current parent:", parent
-            if (parent not in es.owners):
-                print "Could not exchange, because subject is not part of the owners"
-                return
-            # Find new parent.
-            newParent = None
-            for o in es.owners:
-                if (o != parent):
-                    newParent = o
-                    break
-            # Find new subject offset.
-            # Exchange point position.
-            keyE = "node.{0}.{1}.positionAbs".format(sceneName, nodeName)
-            # New parent position.
-            keyP = "node.{0}.{1}.positionAbs".format(sceneName, newParent)
-            st = self.scene.state([keyE, keyP])
-            ePos = st.value(keyE)[0].split(" ")
-            pPos = st.value(keyP)[0].split(" ")
-            print ePos, pPos
-            offset = [float(ePos[0]) - float(pPos[0]),
-                      float(ePos[1]) - float(pPos[1]),
-                      float(ePos[2]) - float(pPos[2])]
-            st = pymjin2.State()
-            # Set subject offset.
-            print "offset", offset
-            key = "{0}.position".format(subjectPrefix)
-            value = "{0} {1} {2}".format(offset[0], offset[1], offset[2])
-            st.set(key, value)
-            # Switch owners.
-            print "new parent:", newParent
-            key = "{0}.parent".format(subjectPrefix)
-            st.set(key, newParent)
-            self.scene.setState(st)
-        else:
+        if (node not in self.enabled):
             print "Could not exchange, because exchange is disabled"
+            return
+        es = self.enabled[node]
+        subjectPrefix = "node.{0}.{1}".format(sceneName, es.subject)
+        key = "{0}.parent".format(subjectPrefix)
+        st = self.scene.state([key])
+        parent = st.value(key)[0]
+        print "current parent:", parent
+        if (parent not in es.owners):
+            print "Could not exchange, because subject is not part of the owners"
+            return
+        # Find new subject offset.
+        # Exchange point position.
+        keyE = "node.{0}.{1}.positionAbs".format(sceneName, nodeName)
+        # Subject position.
+        keyS = "node.{0}.{1}.positionAbs".format(sceneName, es.subject)
+        st = self.scene.state([keyE, keyS])
+        ePos = st.value(keyE)[0].split(" ")
+        sPos = st.value(keyS)[0].split(" ")
+        print ePos, sPos
+        # Find exchange/subject offset.
+        offset = [float(ePos[0]) - float(sPos[0]),
+                  float(ePos[1]) - float(sPos[1]),
+                  float(ePos[2]) - float(sPos[2])]
+        # Subject is far away from the exchange point.
+        if ((math.fabs(offset[0]) > EXCHANGE_ALLOWED_ERROR) or
+            (math.fabs(offset[1]) > EXCHANGE_ALLOWED_ERROR) or
+            (math.fabs(offset[2]) > EXCHANGE_ALLOWED_ERROR)):
+            return
+        # Find new parent.
+        newParent = None
+        for o in es.owners:
+            if (o != parent):
+                newParent = o
+                break
+        # New parent position.
+        keyP = "node.{0}.{1}.positionAbs".format(sceneName, newParent)
+        st = self.scene.state([keyP])
+        pPos = st.value(keyP)[0].split(" ")
+        print pPos
+        pPos = st.value(keyP)[0].split(" ")
+        offset = [float(ePos[0]) - float(pPos[0]),
+                  float(ePos[1]) - float(pPos[1]),
+                  float(ePos[2]) - float(pPos[2])]
+        st = pymjin2.State()
+        # Set subject offset.
+        key = "{0}.position".format(subjectPrefix)
+        value = "{0} {1} {2}".format(offset[0], offset[1], offset[2])
+        st.set(key, value)
+        # Switch owners.
+        print "new parent:", newParent
+        key = "{0}.parent".format(subjectPrefix)
+        st.set(key, newParent)
+        self.scene.setState(st)
     def report(self, sceneName, exchange):
         st = pymjin2.State()
         key = "exchangeLocator.{0}.locatedExchange".format(sceneName)
