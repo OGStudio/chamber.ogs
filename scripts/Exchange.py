@@ -6,6 +6,7 @@ EXCHANGE_ALLOWED_ERROR = 0.01
 
 class ExchangeState(object):
     def __init__(self):
+        self.owners  = []
         self.subject = None
 
 class ExchangeImpl(object):
@@ -21,15 +22,34 @@ class ExchangeImpl(object):
         self.scene  = None
         self.action = None
         self.senv   = None
-#    def onSelection(self, sceneName, nodeName):
-#        node = sceneName + "." + nodeName
-#        if (node not in self.selectable):
-#            return
-#        bs = self.selectable[node]
-#        st = pymjin2.State()
-#        st.set("{0}.node".format(bs.press), node)
-#        st.set("{0}.active".format(bs.press), "1")
-#        self.action.setState(st)
+    def exchange(self, sceneName, nodeName):
+        node = sceneName + "." + nodeName
+        if (node in self.enabled):
+            es = self.enabled[node]
+            print "exchange with owners", es.owners
+            key = "node.{0}.{1}.parent".format(sceneName, es.subject)
+            st = self.scene.state([key])
+            parent = st.value(key)[0]
+            print "current parent:", parent
+            if (parent not in es.owners):
+                print "Could not exchange, because subject is not part of the owners"
+                return
+            # Switch owners.
+            st = pymjin2.State()
+            for o in es.owners:
+                if (o != parent):
+                    st.set(key, o)
+                    break
+            self.scene.setState(st)
+        else:
+            print "Could not exchange, because exchange is disabled"
+    def report(self, sceneName, exchange):
+        st = pymjin2.State()
+        key = "exchangeLocator.{0}.locatedExchange".format(sceneName)
+        st.set(key, exchange)
+        self.senv.reportStateChange(st)
+        st.set(key, "")
+        self.senv.reportStateChange(st)
     def setEnabled(self, sceneName, nodeName, state):
         node = sceneName + "." + nodeName
         if (state):
@@ -40,14 +60,12 @@ class ExchangeImpl(object):
             #es = self.enabled[node]
             del self.enabled[node]
     def setLocatorPosition(self, sceneName, position):
-        print "Exchange.setLocatorPosition", sceneName, position
         v = position.split(" ")
         x = float(v[0])
         y = float(v[1])
         # WARNING: We look into all scenes, not specific one.
         # Loop through exchanges to find one by matching positions.
         for k in self.enabled.keys():
-            print "locate", k
             key = "node.{0}.positionAbs".format(k)
             st = self.scene.state([key])
             if (not len(st.keys)):
@@ -58,9 +76,10 @@ class ExchangeImpl(object):
             ey = float(v[1])
             if ((math.fabs(x - ex) <= EXCHANGE_ALLOWED_ERROR) and
                 (math.fabs(y - ey) <= EXCHANGE_ALLOWED_ERROR)):
-                print "matched exchange", k
-            else:
-                print "didn't match exchange", k
+                # We don't need scene name again. Don't use it.
+                v = k.split(".")
+                self.report(sceneName, v[1])
+                return
     def setSubject(self, sceneName, nodeName, subject):
         node = sceneName + "." + nodeName
         if (node in self.enabled):
@@ -68,25 +87,13 @@ class ExchangeImpl(object):
             es.subject = subject
         else:
             print "Could not set subject, because exchange is disabled"
-
-class ExchangeListenerLocation(pymjin2.ComponentListener):
-    def __init__(self, impl):
-        pymjin2.ComponentListener.__init__(self)
-        # Refer.
-        self.impl = impl
-    def __del__(self):
-        # Derefer.
-        self.impl = None
-    def onComponentStateChange(self, st):
-        for k in st.keys:
-            print "Exchange location", k, st.value(k)
-#            v = k.split(".")
-#            sceneName = v[1]
-#            nodeName = st.value(k)[0]
-#            # Ignore deselection.
-#            if (not len(nodeName)):
-#                continue
-#            self.impl.onSelection(sceneName, nodeName)
+    def setOwner(self, sceneName, nodeName, owners):
+        node = sceneName + "." + nodeName
+        if (node in self.enabled):
+            es = self.enabled[node]
+            es.owners = owners
+        else:
+            print "Could not set owner, because exchange is disabled"
 
 class ExchangeExtensionScriptEnvironment(pymjin2.Extension):
     def __init__(self, impl):
@@ -102,7 +109,10 @@ class ExchangeExtensionScriptEnvironment(pymjin2.Extension):
     def keys(self):
         return ["exchange...subject",
                 "exchange...enabled",
-                "exchangeLocator..position"]
+                "exchange...exchange",
+                "exchange...owner",
+                "exchangeLocator..position",
+                "exchangeLocator..selectedExchange"]
     def name(self):
         return "ExchangeExtensionScriptEnvironment"
     def set(self, key, value):
@@ -114,8 +124,13 @@ class ExchangeExtensionScriptEnvironment(pymjin2.Extension):
             property = v[3]
             if (property == "enabled"):
                 self.impl.setEnabled(sceneName, nodeName, value == "1")
+            elif ((property == "exchange") and
+                  (value == "1")):
+                    self.impl.exchange(sceneName, nodeName)
             elif (property == "subject"):
                 self.impl.setSubject(sceneName, nodeName, value)
+            elif (property == "owner"):
+                self.impl.setOwner(sceneName, nodeName, value)
         elif (type == "exchangeLocator"):
             self.impl.setLocatorPosition(sceneName, value)
 
@@ -126,12 +141,9 @@ class Exchange:
         self.action = action
         self.senv   = scriptEnvironment
         # Create.
-        self.impl             = ExchangeImpl(scene, action, scriptEnvironment)
-        self.listenerLocation = ExchangeListenerLocation(self.impl)
-        self.extension        = ExchangeExtensionScriptEnvironment(self.impl)
+        self.impl      = ExchangeImpl(scene, action, scriptEnvironment)
+        self.extension = ExchangeExtensionScriptEnvironment(self.impl)
         # Prepare.
-#        key = "selector..selectedNode"
-#        self.scene.addListener([key], self.listenerSelection)
         self.senv.addExtension(self.extension)
         print "{0} Exchange.__init__".format(id(self))
     def __del__(self):
@@ -139,7 +151,6 @@ class Exchange:
         #self.scene.removeListener(self.listenerSelection)
         self.senv.removeExtension(self.extension)
         # Destroy.
-        del self.listenerLocation
         del self.extension
         del self.impl
         # Derefer.
