@@ -27,19 +27,42 @@ class ExchangeImpl(object):
         if (node in self.enabled):
             es = self.enabled[node]
             print "exchange with owners", es.owners
-            key = "node.{0}.{1}.parent".format(sceneName, es.subject)
+            subjectPrefix = "node.{0}.{1}".format(sceneName, es.subject)
+            key = "{0}.parent".format(subjectPrefix)
             st = self.scene.state([key])
             parent = st.value(key)[0]
             print "current parent:", parent
             if (parent not in es.owners):
                 print "Could not exchange, because subject is not part of the owners"
                 return
-            # Switch owners.
-            st = pymjin2.State()
+            # Find new parent.
+            newParent = None
             for o in es.owners:
                 if (o != parent):
-                    st.set(key, o)
+                    newParent = o
                     break
+            # Find new subject offset.
+            # Exchange point position.
+            keyE = "node.{0}.{1}.positionAbs".format(sceneName, nodeName)
+            # New parent position.
+            keyP = "node.{0}.{1}.positionAbs".format(sceneName, newParent)
+            st = self.scene.state([keyE, keyP])
+            ePos = st.value(keyE)[0].split(" ")
+            pPos = st.value(keyP)[0].split(" ")
+            print ePos, pPos
+            offset = [float(ePos[0]) - float(pPos[0]),
+                      float(ePos[1]) - float(pPos[1]),
+                      float(ePos[2]) - float(pPos[2])]
+            st = pymjin2.State()
+            # Set subject offset.
+            print "offset", offset
+            key = "{0}.position".format(subjectPrefix)
+            value = "{0} {1} {2}".format(offset[0], offset[1], offset[2])
+            st.set(key, value)
+            # Switch owners.
+            print "new parent:", newParent
+            key = "{0}.parent".format(subjectPrefix)
+            st.set(key, newParent)
             self.scene.setState(st)
         else:
             print "Could not exchange, because exchange is disabled"

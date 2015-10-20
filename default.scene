@@ -421,4 +421,4 @@ node
             model = models/controlSignal.osgt
         exchange11
             parent = ROOT
-            position = 3.000000 -8.000000 1.000000
+            position = 3.000000 -8.000000 0.600000
