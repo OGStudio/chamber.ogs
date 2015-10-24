@@ -1,8 +1,7 @@
 
 import pymjin2
 
-#MAIN_DEPENDENCY_BUTTON   = "scripts/Button.py"
-MAIN_DEPENDENCY_BUTTON   = "scripts/Button2.py"
+MAIN_DEPENDENCY_BUTTON   = "scripts/Button.py"
 MAIN_DEPENDENCY_CRANE    = "scripts/Crane.py"
 MAIN_DEPENDENCY_EXCHANGE = "scripts/Exchange.py"
 MAIN_DEPENDENCY_LINE     = "scripts/Line.py"
